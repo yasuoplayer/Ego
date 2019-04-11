@@ -2,6 +2,7 @@
     <div class="detail">
         <div class="base">
             <vue-photo-zoom-pro class="img" :scale='1.5'    :url="img"></vue-photo-zoom-pro >
+            11
             <commodityOption :id="id"/>
         </div>
         <phoneParameter/>
