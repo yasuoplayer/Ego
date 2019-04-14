@@ -1,7 +1,7 @@
 <template>
   <div class="home clearfix">
     <toolBar/>
-    <headerSearch/>
+    <headerSearch />
     <router-view></router-view>
     <foot/>
   </div>
@@ -21,7 +21,7 @@ export default {
   data()
   {
     return {
-      loginMsg:'登录/注册'
+      loginMsg:'登录/注册',
     }
   }
 };

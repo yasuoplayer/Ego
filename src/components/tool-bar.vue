@@ -1,6 +1,6 @@
 <template>
   <ul class="tool-bar">
-    <li class="tool-bar-item">
+    <li class="tool-bar-item" @click="goHome">
       <span class="home-img"></span>
       <span class="home">主页</span>
     </li>
@@ -18,9 +18,10 @@
           <i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>待支付</el-dropdown-item>
+          <!-- <el-dropdown-item>待支付</el-dropdown-item> -->
           <el-dropdown-item>待收货</el-dropdown-item>
-          <el-dropdown-item>待评价</el-dropdown-item>
+           <el-dropdown-item>已收货</el-dropdown-item>
+          <!-- <el-dropdown-item>待评价</el-dropdown-item> -->
         </el-dropdown-menu>
       </el-dropdown>
     </li>
@@ -50,6 +51,10 @@ export default {
     cancellation()
     {
       this.$store.commit('cancellation')
+    },
+    goHome()
+    {
+      this.$router.push('/home')
     }
   }
 };

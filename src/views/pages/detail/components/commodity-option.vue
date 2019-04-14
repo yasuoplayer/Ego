@@ -2,23 +2,16 @@
   <div class="commodity-option">
     <div class="name">HUAWEI/华为Mate 20 Pro 亮黑色（UD）8GB+128GB 屏下指纹版麒麟980芯片全面屏徕卡三摄移动联通电信4G全网通手机</div>
     <el-form label-position="left" label-width="70px" :model="form">
-      <el-form-item label="市场价">
-        <div class="price">
-          ￥
-          <span class="price-number">{{form.price}}</span>.00
-        </div>
-      </el-form-item>
       <el-form-item label="会员价">
         <div class="price">
           ￥
-          <span class="price-number">{{form.price-200}}</span>.00
+          <span class="price-number">{{form.price}}</span>.00
           <el-popover placement="top" trigger="hover">
-            <span>在本站历史消费不小于五千人民币即可成为会员哦</span>
+            <span>在本站注册后即可成为会员哦</span>
             <el-button slot="reference" type="text" size="mini">如何成为会员？</el-button>
           </el-popover>
         </div>
       </el-form-item>
-
       <el-form-item label="颜色">
         <el-radio-group v-model="form.color" size="small">
           <el-radio label="red" border>红</el-radio>
@@ -34,11 +27,11 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="数量">
-        <el-input-number v-model="form.num"  :min="1" :max="10" :step="1" :precision="0"></el-input-number>
-      </el-form-item>      
+        <el-input-number v-model="form.num" :min="1" :max="10" :step="1" :precision="0"></el-input-number>
+      </el-form-item>
       <el-form-item>
-        <el-button>加入购物车</el-button>
-        <el-button type="primary">立即购买</el-button>
+        <el-button @click="addCart">加入购物车</el-button>
+        <el-button type="primary" @click="buy">立即购买</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -51,7 +44,8 @@ export default {
       form: {
         price: 5499,
         memory: "",
-        num:1
+        num: 1,
+        color: ""
       }
     };
   },
@@ -62,6 +56,43 @@ export default {
   },
   mounted() {
     console.log(this.id);
+  },
+  methods: {
+    addCart(flg) {
+      var msg;
+      for (var i in this.form) {
+        if (!this.form[i]) {
+          if (i == "memory") {
+            msg = "内存";
+          } else if (i == "color") {
+            msg = "颜色";
+          }
+        }
+      }
+      if (msg) {
+        this.$message({
+          message: `请先选择${msg}哦`,
+          type: "warning"
+        });
+      }
+
+      if (!msg) {
+        if (flg != "buy") {
+          this.$message({
+            message: "已成功添加至购物车",
+            type: "success"
+          });
+        }
+        return true;
+      } else {
+        return false;
+      }
+    },
+    buy() {
+      if (this.addCart("buy")) {
+        this.$router.push("/personal/personaldata");
+      }
+    }
   }
 };
 </script>

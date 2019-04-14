@@ -33,4 +33,8 @@ a{
   clear: both;
   visibility: hidden;
 }
+  .el-menu-vertical-demo{
+    width: 200px;
+    min-height: 570px;
+  }
 </style>

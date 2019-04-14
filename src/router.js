@@ -5,6 +5,9 @@ import login from './views/pages/account/index.vue'
 import indexBody from './views/pages/home/components/index-body.vue'
 import result from './views/pages/result/index.vue'
 import detail from './views/pages/detail/index.vue'
+import personal from './views/pages/personal/index.vue'
+import personalData from './views/pages/personal/components/personal-data.vue' 
+import cart from './views/pages/personal/components/cart.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -40,6 +43,22 @@ export default new Router({
     {
       path: '/home',
       redirect:'/'
+    },
+    {
+      path:'/personal',
+      component:personal,
+      children:[
+        {
+          name:'personalData',
+          path:'personaldata',
+          component:personalData
+        },
+        {
+          name:'cart',
+          path:'cart',
+          component:cart
+        }        
+      ]
     }
   ]
 })

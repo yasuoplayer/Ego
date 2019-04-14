@@ -10,6 +10,7 @@
   "dependencies": {
     "core-js": "^2.6.5",
     "element-ui": "^2.7.0",
+    "v-distpicker": "^1.2.1",
     "vue": "^2.6.6",
     "vue-photo-zoom-pro": "^1.2.5",
     "vue-router": "^3.0.1",

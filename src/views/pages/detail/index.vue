@@ -1,7 +1,7 @@
 <template>
     <div class="detail">
         <div class="base">
-            <vue-photo-zoom-pro class="img" :scale='1.5'    :url="img"></vue-photo-zoom-pro >
+            <vue-photo-zoom-pro class="img" :scale='1.5'  hide-zoom  :url="img"></vue-photo-zoom-pro >
             <commodityOption :id="id"/>
         </div>
         <phoneParameter/>
