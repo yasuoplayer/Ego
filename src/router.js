@@ -8,6 +8,10 @@ import detail from './views/pages/detail/index.vue'
 import personal from './views/pages/personal/index.vue'
 import personalData from './views/pages/personal/components/personal-data.vue' 
 import cart from './views/pages/personal/components/cart.vue'
+import order from './views/pages/personal/components/order.vue'
+import admin from './views/pages/admin/index.vue'
+import goods from './views/pages/admin/components/goods.vue'
+import orderManagement from './views/pages/admin/components/order-management.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -57,8 +61,33 @@ export default new Router({
           name:'cart',
           path:'cart',
           component:cart
+        },
+        {
+          name:'order',
+          path:'order',
+          component:order
         }        
       ]
-    }
+    },
+    {
+      path:'/admin',
+      component:admin,
+      children:[
+        {
+          path:'/',
+          redirect:'goods'
+        },
+        {
+          name:'goods',
+          path:'goods',
+          component:goods
+        },
+        {
+          name:'orderManagement',
+          path:'orderManagement',
+          component:orderManagement
+        }                     
+      ]
+    }    
   ]
 })

@@ -37,8 +37,8 @@
                 <span class="symbol">.00</span>
             </div>
             <div class=" clearfix">
-          <el-button type="text" class="fl">充值</el-button>
-          <el-button type="text" class="fr">提现</el-button>
+          <el-button type="text" class="fl" @click="handleMoney('+')">充值</el-button>
+          <el-button type="text" class="fr" @click="handleMoney('-')">提现</el-button>
         </div>
             </el-card>
         </div>
@@ -68,7 +68,26 @@ export default {
         }
     },
     components: { VDistpicker },
-    methods:{       
+    methods:{
+        handleMoney(flag)
+        {
+             this.$prompt('请输入金额', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                inputPattern: /^(0|[1-9][0-9]*)$/,
+                inputErrorMessage: '请输入非0开头的正整数'
+                }).then(({ value }) => {
+                this.$message({
+                    type: 'success',
+                    message: `金额大小为： ${value}`
+                });
+                }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '取消输入'
+                });       
+                });
+        }       
     }
 }
 </script>

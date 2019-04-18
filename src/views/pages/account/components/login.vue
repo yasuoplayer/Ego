@@ -64,7 +64,9 @@ export default {
     submitForm() {
       this.$refs.form.validate(valid => {
         if (valid) {
-          alert("submit!");
+          this.$axios('/ego/user/login').then(res=>{
+            console.log(res)
+          })
         } else {
           return false;
         }

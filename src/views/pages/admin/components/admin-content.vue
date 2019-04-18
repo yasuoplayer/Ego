@@ -1,5 +1,5 @@
 <template>
-    <div class="personal-content">
+    <div class="admin-content">
       <navMenu/>
       <div class="content-right">
           <router-view class="router"></router-view>
@@ -9,7 +9,7 @@
 <script>
 import navMenu from './nav-menu'
 export default {
-    name:'personalContent',
+    name:'adminContent',
     data()
     {
         return {
@@ -22,15 +22,14 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.personal-content{
+.admin-content{
     padding: 10px 10%;
     background: #eee;
-    display: flex;
+    display: flex
 }
 .content-right{
     flex: 1;
-    background: #fff;
-        overflow: hidden
+    background: #fff
 }
 .router{
     height:100%;

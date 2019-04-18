@@ -7,11 +7,11 @@
     <li class="tool-bar-item" v-if="isLogin">
       <span class="cancel"  @click="cancellation">退出登录</span>
     </li>
-    <li class="tool-bar-item">
+    <li class="tool-bar-item" v-if="isAdmin">
       <span class="cart-img"></span>
       <span class="cart">购物车</span>
     </li>
-    <li class="tool-bar-item">
+    <li class="tool-bar-item" v-if="isAdmin">
       <el-dropdown :show-timeout=50 :hide-timeout=50	>
         <span class="el-dropdown-link">
           我的订单
@@ -45,7 +45,11 @@ export default {
     isLogin()
     {
       return this.$store.state.userMsg
-    }
+    },
+    isAdmin()
+    {
+      return this.$store.state.root
+    }    
   },
   methods:{
     cancellation()

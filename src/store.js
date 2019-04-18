@@ -5,7 +5,9 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    userMsg:{}
+    userMsg:{
+      root:1
+    }
   },
   mutations: {
     cancellation(state)

@@ -1,7 +1,7 @@
 <template>
 <div class="nav-menu">
 
-<el-menu default-active="1" class="el-menu-vertical-demo" :collapse="isCollapse">
+<el-menu default-active="1-1" class="el-menu-vertical-demo" :collapse="isCollapse">
       <el-menu-item @click="toggleCollapse">
     <i :class="{'el-icon-caret-right':isCollapse,'el-icon-caret-left':!isCollapse}"></i>
     <span slot="title">{{isCollapse?'展开菜单':'收起菜单'}}</span>
@@ -16,7 +16,7 @@
       <el-menu-item index="1-1" @click="goTo('/personal/personaldata')">帐号资料</el-menu-item>
     </el-menu-item-group>
   </el-submenu>
-    <el-menu-item index="2">
+    <el-menu-item index="2" @click="goTo('/personal/order')">
     <i class="el-icon-tickets"></i>
     <span slot="title">所有订单</span>
   </el-menu-item>

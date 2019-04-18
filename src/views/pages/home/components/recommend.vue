@@ -8,7 +8,7 @@
       </div>
       <div class="recomend-content">
         <div class="content-left">
-          <img v-lazy="listItem.leftImg" class="recomend-item-box-left-img">
+          <img v-lazy="listItem.letfImg" class="recomend-item-box-left-img">
         </div>
         <div class="content-right">
           <el-carousel indicator-position="none" height="260px" :autoplay="false">

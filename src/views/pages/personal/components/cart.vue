@@ -6,6 +6,7 @@
     tooltip-effect="dark"  
     stripe 
       border
+      class="table"
     @selection-change="handleSelectionChange">
     <el-table-column
       type="selection"
@@ -61,8 +62,8 @@
           </el-table>
           <div class="accounts clearfix">
               <div class="cart-ctrl">
-                  <el-button type="text" >删除所选</el-button>
-                  <el-button type="text">清空购物车</el-button>
+                  <el-button type="text" @click="deleteSelections" :disabled="!selections.length">删除所选</el-button>
+                  <el-button type="text" @click="clearCart" :disabled="!tableData.length">清空购物车</el-button>
               </div>
               <div class="number-ctrl">
                   <div class="price">
@@ -80,7 +81,7 @@
       @current-change="handleCurrentChange"
       :current-page="currentPage"
       :page-sizes="pageSizes"
-      :page-size="100"
+      :page-size="pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total">
     </el-pagination>
@@ -108,7 +109,9 @@ export default {
              pageSizes:[5,10,20,40],
              total:21,
              key:'',
-             totalPrice:'100'
+             totalPrice:'100',
+             pageSize:5,
+             selections:[]
         }
     },
     components:{
@@ -117,18 +120,82 @@ modifyDialog
     methods:{
         handleSelectionChange(selections)
         {
-            console.log(selections)
+            this.selections = selections
         },
         handleEdit(obj)
         {
+          var newData = {...obj}
+          switch (newData.color) {
+            case '红色':
+              newData.color = 'red'
+              break;
+            case '蓝色':
+              newData.color = 'blue'
+              break;         
+            default:
+              newData.color = 'yellow'
+              break;
+          }
             this.$refs.dialog.controlDialog({
                 flag:true,
-                data:{...obj}
+                data:newData
             })
         },
-        handleDelete()
+        deleteSelections()
         {
-
+            this.$confirm('确认删除吗?', '提示', {
+                      confirmButtonText: '确定',
+                      cancelButtonText: '取消',
+                      type: 'warning'
+                    }).then(() => {
+                      this.$message({
+                        type: 'success',
+                        message: '删除成功!'
+                      });
+                    }).catch(() => {
+                      this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                      });          
+                    })
+        },
+        clearCart()
+        {
+            this.$confirm('确认清空购物车吗?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.tableData = []
+              this.$message({
+                type: 'success',
+                message: '清空成功!'
+              });
+            }).catch(() => {
+              this.$message({
+                type: 'info',
+                message: '已取消清空操作'
+              });          
+            });
+        },
+        handleDelete(data)
+        {
+          console.log(data)
+            this.$confirm('确认删除吗?', '提示', {
+                      confirmButtonText: '确定',
+                      cancelButtonText: '取消',
+                      type: 'warning'
+                    }).then(() => {
+                      this.$message({
+                        type: 'success',
+                        message: '删除成功!'
+                      });
+                    }).catch(() => {
+                      this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                      });          
+                    })
         },
         handleSizeChange()
         {
@@ -170,6 +237,9 @@ modifyDialog
 }
 </script>
 <style lang="scss" scoped>
+.table{
+  width: 100%;
+}
 .buy{
     padding-left: 10px;
 }

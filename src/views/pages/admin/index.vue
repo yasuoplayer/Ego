@@ -1,23 +1,23 @@
 <template>
-  <div class="personal">
+  <div class="admin">
     <tooBar/>
-    <personalContent/>
+    <adminContent/>
     <foot/>
   </div>
 </template>
 <script>
 import tooBar from "../../../components/tool-bar";
 import foot from "../../../components/foot";
-import personalContent from "./components/personal-content";
+import adminContent from "./components/admin-content";
 export default {
-  name: "personal",
+  name: "admin",
   data() {
     return {};
   },
   components: {
     tooBar,
     foot,
-    personalContent
+    adminContent
   }
 };
 </script>
