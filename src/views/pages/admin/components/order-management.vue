@@ -10,14 +10,14 @@
       <template slot-scope="props">
         <el-form label-position="left" inline>
             <el-row :gutter="10">
-                                <el-col :span="12">
+                                <!-- <el-col :span="12">
                         <el-form-item label="订单号">
                         <span>{{ props.row.id }}</span>
                         </el-form-item>
-                </el-col>
+                </el-col> -->
                 <el-col :span="12">
-                        <el-form-item label="商品名称">
-                        <span>{{ props.row.name }}</span>
+                        <el-form-item label="下单时间">
+                        <span>{{ props.row.time }}</span>
                         </el-form-item>
                 </el-col>
                                 <el-col :span="12">
@@ -32,7 +32,7 @@
                 </el-col>  
                 <el-col :span="12">
                         <el-form-item label="商品内存">
-                        <span>{{ props.row.memory }}g</span>
+                        <span>{{ props.row.memory }}</span>
                         </el-form-item>
                 </el-col> 
                 <el-col :span="12">
@@ -40,11 +40,11 @@
                         <span>{{ props.row.price }}</span>
                         </el-form-item>
                 </el-col> 
-                <el-col :span="12">
+                <!-- <el-col :span="12">
                         <el-form-item label="商品数量">
                         <span>{{ props.row.number }}</span>
                         </el-form-item>
-                </el-col>
+                </el-col> -->
                 <el-col :span="12">
                         <el-form-item label="交易金额">
                         <span>{{ props.row.money }}</span>
@@ -74,8 +74,8 @@
       </template>
     </el-table-column>
     <el-table-column
-      label="商品名称"
-      prop="id">
+      label='订单号'
+      prop="_id">
     </el-table-column>
     <el-table-column
       label="商品名称"
@@ -110,7 +110,7 @@ export default {
         return {
             tableData: [
                 {
-                id:'001',
+                _id:'001',
           name: '华为手机',
           brand: '华为',
           color: '红色',
@@ -128,7 +128,25 @@ export default {
         currentPage:1
         }
     },
+    filters:{
+      dataFilter(data)
+      {
+          return data.isBuy
+      }
+    },
+    mounted()
+    {
+      this.getData()
+    },
     methods:{
+      getData()
+      {
+        this.$axios({
+          url:'/ego/record/all'
+        }).then(res=>{
+          this.tableData = res.data
+        })
+      },
         handleCurrentChange()
         {
 

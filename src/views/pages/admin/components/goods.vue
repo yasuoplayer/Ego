@@ -1,18 +1,13 @@
 <template>
   <div class="goods">
     <div class="title">已上架商品</div>
-    <el-table
-      :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
-      border
-      stripe
-      @selection-change="handleSelectionChange"
-    >
+    <el-table :data="tableData" border stripe @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column label="商品名称" prop="name"></el-table-column>
-      <el-table-column label="销售数量" prop="saleNumber"></el-table-column>
+      <el-table-column label="商品品牌" prop="brand"></el-table-column>
       <el-table-column align="right">
         <template slot="header" slot-scope="scope">
-          <el-input v-model="search" size="mini" placeholder="输入关键字搜索"/>
+          <el-input v-model="key" size="mini" placeholder="输入关键字搜索" clearable/>
         </template>
         <template slot-scope="scope">
           <div class="row-ctrl">
@@ -24,8 +19,9 @@
       </el-table-column>
     </el-table>
     <div class="btns">
-        <el-button type="text" @click="addGoods">上架新商品</el-button>
-        <el-button type="text" @click="deleteAll">下架所有商品</el-button>
+      <el-button type="text" @click="addGoods">上架新商品</el-button>
+      <el-button type="text" @click="deleteSelestions" :disabled="!selections.length">下架所选商品</el-button>
+      <el-button type="text" @click="deleteAll" :disabled="!tableData.length">下架所有商品</el-button>
     </div>
     <el-pagination
       class="pagination"
@@ -38,12 +34,12 @@
       :total="total"
     ></el-pagination>
     <explainDialog ref="explainDialog"/>
-    <modifyDialog ref="modifyDialog"/>
+    <modifyDialog ref="modifyDialog" @update="getData"/>
   </div>
 </template>
 <script>
-import modifyDialog from './modify-dialog'
-import explainDialog from './explain-dialog'
+import modifyDialog from "./modify-dialog";
+import explainDialog from "./explain-dialog";
 export default {
   name: "goods",
   data() {
@@ -52,76 +48,156 @@ export default {
       pageSize: 5,
       currentPage: 1,
       total: 40,
-      tableData: [
-        {
-          name: "华为手机",
-          saleNumber: "100",
-          brand:'',
-          imageUrl:'',
-
-        }
-      ],
-      search: "",
+      tableData: [],
+      key: "",
       selections: []
     };
   },
-  components:{
-      modifyDialog,
-      explainDialog
+  components: {
+    modifyDialog,
+    explainDialog
+  },
+  mounted() {
+    this.getData();
   },
   methods: {
-    handleExplain()
-    {
-      this.$refs.explainDialog.controlDialog({
-        flag:true,
-        data:{}
-      })
+    getData() {
+      this.$axios({
+        url: "/ego/good/all",
+        params: {
+          currentPage: this.currentPage,
+          pageSize: this.pageSize,
+          key: this.key
+        }
+      }).then(res => {
+        this.tableData = res.data.data;
+        this.total = res.data.total;
+      });
     },
-      deleteAll()
-      {
-                  this.$confirm('确认下架所有商品吗?', '提示', {
+    handleExplain(data) {
+      this.$refs.explainDialog.controlDialog({
+        flag: true,
+        data
+      });
+    },
+    deleteSelestions() {
+              this.$confirm('确定下架所选商品吗?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-            this.tableData = []
+      this.$axios({
+        url: "/ego/good/deleteByIds",
+        method: "post",
+        data: {
+          ids: this.selections
+        }
+      }).then(res => {
+        if (res.data.code) {
+          this.getData();
           this.$message({
-            type: 'success',
-            message: '下架成功!'
+            type: "success",
+            message: "下架成功!"
           });
+        }
+      });
         }).catch(() => {
           this.$message({
             type: 'info',
-            message: '已取消删除'
+            message: '已取消下架'
           });          
         });
-          
-      },
-    handleSizeChange() {},
-    handleCurrentChange() {},
-    handleEdit(data) {
-        this.$refs.modifyDialog.controlDialog({
-            flag:true,
-            data
+
+    },
+    deleteAll() {
+      this.$confirm("确认下架所有商品吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$axios({
+            url: "/ego/good/deleteAll"
+          }).then(res => {
+            if (res.data.code == 1) {
+              this.currentPage = 1;
+              this.getData();
+              this.$message({
+                type: "success",
+                message: "下架成功!"
+              });
+            }
+          });
         })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消下架"
+          });
+        });
     },
-    handleDelete() {},
+    handleSizeChange(pageSize) {
+      this.pageSize = pageSize;
+      this.getData();
+    },
+    handleCurrentChange(currentPage) {
+      this.currentPage = currentPage;
+      this.getData();
+    },
+    handleEdit(data) {
+      this.$refs.modifyDialog.controlDialog({
+        flag: true,
+        data
+      });
+    },
+    handleDelete(data) {
+      this.$confirm("确定下架该商品吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$axios({
+            url: "/ego/good/deleteById",
+            method: "post",
+            data: {
+              _id: data._id
+            }
+          }).then(res => {
+            if (res.data.code) {
+              this.$message({
+                type: "success",
+                message: "下架成功!"
+              });
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消下架"
+          });
+        });
+    },
     handleSelectionChange(selections) {
-      this.selections = selections;
+      var arr = [];
+      for (var n = 0; n < selections.length; n++) {
+        arr.push(selections[n]._id);
+      }
+      this.selections = arr;
     },
-    addGoods()
-    {
-         this.$refs.modifyDialog.controlDialog({
-            flag:true,
-            data:{}
-        })       
+    addGoods() {
+      this.$refs.modifyDialog.controlDialog({
+        flag: true,
+        data: {}
+      });
     }
   }
 };
 </script>
 <style lang="scss" scoped>
-.btns{
-    margin: 10px;
+.btns {
+  margin: 10px;
 }
 .goods {
   padding: 10px;

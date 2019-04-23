@@ -15,9 +15,9 @@
       </el-form-item>
       <el-form-item label="颜色">
         <el-radio-group v-model="formData.color" size="small">
-          <el-radio label="red" border>红</el-radio>
-          <el-radio label="black" border>蓝</el-radio>
-          <el-radio label="yellow" border>黄</el-radio>
+          <el-radio label="红" border>红</el-radio>
+          <el-radio label="蓝" border>蓝</el-radio>
+          <el-radio label="黄" border>黄</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="内存">
@@ -59,12 +59,22 @@ export default {
         },
         comfirmForm()
         {
-            this.$message({
-                message:'修改成功',
-                type:'success'
-            })
-            this.dialogVisible = false
-
+          this.formData.money = this.formData.number * this.formData.price
+          this.$axios({
+            url:'/ego/record/updateById',
+            method:'post',
+            data:this.formData
+          }).then(res=>{
+            if(res.data.code==1)
+            {
+              this.$message({
+                  message:'修改成功',
+                  type:'success'
+              })
+              this.$emit('update')
+              this.dialogVisible = false
+            }
+          })
         }
     }
 }

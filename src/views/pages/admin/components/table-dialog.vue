@@ -57,10 +57,20 @@ export default {
     },
     comfirmForm() {
       this.$message({
-        message: "修改成功",
+        message: "操作成功",
         type: "success"
       });
+      this.$emit('addRow',this.formData)
       this.dialogVisible = false;
+    },
+    resetFrom()
+    {
+      this.formData = {
+        color: "",
+        memory: "8",
+        price: "",
+        number: "1"
+      }
     }
   }
 };

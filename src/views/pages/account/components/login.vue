@@ -10,7 +10,7 @@
           </el-form-item>
           <el-form-item prop="pass">
             <div class="label" slot="label">密码</div>
-            <el-input type="password" v-model="form.pass" autocomplete="off" clearable>
+            <el-input type="password" v-model="form.psw" autocomplete="off" clearable>
               <img slot="prefix" v-lazy="loginIcon.psw" class="img">
             </el-input>
           </el-form-item>
@@ -43,11 +43,11 @@ export default {
     };
     return {
       form: {
-        pass: "",
+        psw: "",
         user: ""
       },
       rules: {
-        pass: [{ validator: validatePass, trigger: "blur" }],
+        psw: [{ validator: validatePass, trigger: "blur" }],
         user: [{ validator: validateUser, trigger: "blur" }]
       }
     };
@@ -64,8 +64,26 @@ export default {
     submitForm() {
       this.$refs.form.validate(valid => {
         if (valid) {
-          this.$axios('/ego/user/login').then(res=>{
-            console.log(res)
+          this.$axios({
+            method:'post',
+            url:'/ego/user/login',
+            data:this.form
+          }).then(res=>{
+             if(res.data.code)
+            {
+              this.$message({
+                type:'success',
+                message:res.data.msg
+              })
+              this.$store.commit('setUserMsg',res.data.data)
+              this.$router.push("/");
+            }
+            else{
+              this.$message({
+                type:'error',
+                message:res.data.msg
+              })
+            }
           })
         } else {
           return false;

@@ -38,7 +38,7 @@ export default {
         controlDialog(obj)
         {
             this.dialogVisible = obj.flag
-            this.formData = obj.data
+            this.formData = {...obj.data}
         },
         cancel(){
             this.dialogVisible = false
@@ -46,12 +46,24 @@ export default {
         },
         comfirmForm()
         {
-            this.formData.arrive = true
-            this.$message({
-                message:'评论成功',
-                type:'success'
+            this.formData.commentTime=new Date().getTime()
+            this.formData.isArrive=true
+            this.$axios({
+                url:'/ego/record/signFor',
+                method:'post',
+                data:this.formData
+            }).then(res=>{
+                if(res.data.code)
+                {
+                    this.$emit('update')
+                    this.$message({
+                        message:'评论成功',
+                        type:'success'
+                    })
+                    this.dialogVisible = false
+                }
             })
-            this.dialogVisible = false
+
 
         }
     }

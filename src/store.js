@@ -13,6 +13,10 @@ export default new Vuex.Store({
     cancellation(state)
     {
       state.userMsg = ''
+    },
+    setUserMsg(state,data)
+    {
+      state.userMsg = {...data}
     }
   },
   actions: {

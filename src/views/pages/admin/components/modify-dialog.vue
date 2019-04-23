@@ -8,8 +8,15 @@
   <el-form-item label="商品名称">
     <el-input v-model="formData.name"></el-input>
   </el-form-item>
-    <el-form-item label="商品品牌">
-    <el-input v-model="formData.brand"></el-input>
+    <el-form-item label="商品品牌" class="selection">
+        <el-select v-model="formData.brand" placeholder="请选择">
+    <el-option
+      v-for="item in options"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value">
+    </el-option>
+  </el-select>
   </el-form-item>
       <el-form-item label="商品图片">
  <el-upload
@@ -63,7 +70,7 @@
     </el-table>
   </el-form-item>
   </el-form>
-  <tableDialog ref="tableDialog"/>
+  <tableDialog ref="tableDialog" @addRow='addTable'/>
   <span slot="footer" class="dialog-footer">
     <el-button @click="cancel">取 消</el-button>
     <el-button @click="addConfig">新增配置</el-button>
@@ -83,26 +90,46 @@ export default {
                 name:'',
                 imageUrl:'',
                 brand:'',
-                
+                img:''
             },
             tableData:[
-                {
-                    color:'红色',
-                    memory:16,
-                    number:100,
-                    price:1000
-                }
+            ],
+            options:[
+              {
+                lable:'华为',
+                value:'华为'
+              },
+                            {
+                lable:'小米',
+                value:'小米'
+              },
+                            {
+                lable:'苹果',
+                value:'苹果'
+              },
+                            {
+                lable:'其他',
+                value:'其他'
+              }
             ]
         }
     },
     components:{
         tableDialog
     },
+    mounted()
+    {
+      
+    },
     methods:{
         handleDelete(i)
         {
             this.tableData.splice(i,1)
         },
+            emitUpdate()
+    {
+      this.$emit('update')
+    },
         handleEdit(data)
         {
             this.$refs.tableDialog.controlDialog({
@@ -115,6 +142,12 @@ export default {
         {
             this.dialogVisible = obj.flag
             this.formData = {...obj.data}
+            if(this.formData.img)
+            {
+              this.formData.imageUrl = 'http://localhost:3000/'+this.formData.img
+              this.formData.img = '1'
+              this.tableData = JSON.parse(this.formData.config)
+            }
         },
         cancel(){
             this.dialogVisible = false
@@ -122,13 +155,34 @@ export default {
         },
         comfirmForm()
         {
-            this.formData.arrive = true
+            let formData = new FormData();
+            if(this.formData._id)
+            {
+              formData.append('_id', this.formData._id);
+            }
+            else{
+              formData.append('img', this.formData.img);
+            }
+            formData.append('name', this.formData.name);
+            formData.append('brand', this.formData.brand); 
+            formData.append('config', JSON.stringify(this.tableData));
+          this.$axios({
+            url:'/ego/good/add',
+            method:'post',
+            data:formData,
+            headers:{'Content-Type': 'multipart/form-data'}
+          }).then(res=>{
+            if(res.data.code)
+            {
+              this.$emit('update')
             this.$message({
-                message:'评论成功',
+                message:'操作成功',
                 type:'success'
             })
+            
             this.dialogVisible = false
-
+            }
+          })
         },
         addConfig()
         {
@@ -138,8 +192,15 @@ export default {
                 mode:'add'
             })            
         },
+        addTable(data)
+        {
+          this.tableData.push({
+            ...data
+          })
+        },
         handleAvatarChange(file,fileList) {
-        this.formData.imageUrl = URL.createObjectURL(file.raw);
+          this.$set(this.formData, 'img', file.raw)
+          this.$set(this.formData, 'imageUrl', URL.createObjectURL(file.raw))
       },
     }
 }
@@ -170,6 +231,9 @@ export default {
     width: 178px;
     height: 178px;
     display: block;
+  }
+  .selection{
+    width: 100%
   }
 </style>
 

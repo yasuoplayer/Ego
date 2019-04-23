@@ -1,7 +1,7 @@
 <template>
 <div class="nav-menu">
 
-<el-menu default-active="1-1" class="el-menu-vertical-demo" :collapse="isCollapse">
+<el-menu :default-active="active" class="el-menu-vertical-demo" :collapse="isCollapse">
       <el-menu-item @click="toggleCollapse">
     <i :class="{'el-icon-caret-right':isCollapse,'el-icon-caret-left':!isCollapse}"></i>
     <span slot="title">{{isCollapse?'展开菜单':'收起菜单'}}</span>
@@ -33,6 +33,23 @@ export default {
   data() {
     return {
       isCollapse:false,
+      active:''
+    }
+  },
+  watch:{
+    '$route'(to)
+    {
+      switch (to.name) {
+        case 'order':
+          this.active = '2'
+          break;
+        case 'cart':
+          this.active = '3'
+          break;      
+        default:
+        this.active = '1-1'
+          break;
+      }
     }
   },
     methods: {

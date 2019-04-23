@@ -26,7 +26,7 @@
         <el-button
           size="mini"
           type="danger"
-          @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          @click="handleDelete(scope.$index)">删除</el-button>
       </template>
     </el-table-column>
   </el-table>        
@@ -54,22 +54,56 @@ export default {
     };
   },
   methods: {
-      handleDelete()
-      {},
+      handleDelete(index)
+      {
+        this.tableData.splice(index,1)
+      },
     controlDialog(obj) {
       this.dialogVisible = obj.flag;
       this.formData = {...obj.data}
+      console.log(this.formData)
+      this.getData(this.formData._id)
+    },
+    getData(goodId)
+    {
+      this.$axios({
+        method:'post',
+        url:'/ego/config/getByGoodId',
+        data:{
+          goodId
+        }
+      }).then(res=>{
+        this.tableData = res.data.data.config
+      })
     },
     cancel() {
-      this.resetFrom();
       this.dialogVisible = false;
     },
     comfirmForm() {
+      this.$axios({
+        url:'/ego/config/add',
+        method:'post',
+        data:{
+          goodId:this.formData._id,
+          config:this.tableData
+        }
+      }).then(res=>{
+        if(res.data.code ==1)
+        {
       this.$message({
-        message: "修改成功",
+        message: res.data.msg,
         type: "success"
-      });
+      })
+        }
+        else{
+       this.$message({
+        message: '系统繁忙，请稍后再试',
+        type: "error"
+      })         
+        }
+
       this.dialogVisible = false;
+      })
     },
     addOneRow()
     {
