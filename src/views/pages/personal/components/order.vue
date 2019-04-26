@@ -85,7 +85,7 @@ export default {
       key: "",
       pageSizes: [5, 10, 20, 40],
       currentPage: 1,
-      total: 20,
+      total: 0,
       pageSize: 5
     };
   },

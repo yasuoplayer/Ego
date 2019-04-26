@@ -1,6 +1,6 @@
 <template>
   <div class="expain-dialog">
-    <el-dialog :title="title" :visible.sync="dialogVisible">
+    <el-dialog :title="title" :visible.sync="dialogVisible" @close='reset'>
 <el-table
     :data="tableData"
     border
@@ -54,6 +54,11 @@ export default {
     };
   },
   methods: {
+    reset()
+    {
+      this.tableData =[]
+      this.formData={}
+    },
       handleDelete(index)
       {
         this.tableData.splice(index,1)
@@ -61,7 +66,6 @@ export default {
     controlDialog(obj) {
       this.dialogVisible = obj.flag;
       this.formData = {...obj.data}
-      console.log(this.formData)
       this.getData(this.formData._id)
     },
     getData(goodId)
@@ -73,13 +77,26 @@ export default {
           goodId
         }
       }).then(res=>{
-        this.tableData = res.data.data.config
+        this.tableData = res.data.data.config || []
       })
     },
     cancel() {
       this.dialogVisible = false;
     },
     comfirmForm() {
+      var arr = []
+      for(var n=this.tableData.length-1;n>-1;n--)
+      {
+        var attribute  = this.tableData[n].attribute
+        if(arr.indexOf(attribute)>-1)
+        {
+            this.tableData.splice(n,1)
+        }
+        else{
+          arr.push(attribute)
+        }
+      }
+
       this.$axios({
         url:'/ego/config/add',
         method:'post',
@@ -88,7 +105,7 @@ export default {
           config:this.tableData
         }
       }).then(res=>{
-        if(res.data.code ==1)
+        if(res.data.code)
         {
       this.$message({
         message: res.data.msg,

@@ -108,21 +108,8 @@ export default {
     data()
     {
         return {
-            tableData: [
-                {
-                _id:'001',
-          name: '华为手机',
-          brand: '华为',
-          color: '红色',
-          comment: '棒',
-          rate: 3,
-          price: 300,
-          number: 2,
-          money:600,
-          memory:16,
-          user:'aa'
-        }],
-        total:100,
+            tableData: [],
+        total:0,
         pageSize:5,
         pageSizes:[5,10,20,40],
         currentPage:1
@@ -142,18 +129,28 @@ export default {
       getData()
       {
         this.$axios({
-          url:'/ego/record/all'
+          url:'/ego/record/all',
+          params:{
+            pageSize:this.pageSize,
+            currentPage:this.currentPage
+          }
         }).then(res=>{
-          this.tableData = res.data
+          if(res.data.code)
+          {
+            this.tableData = res.data.data
+            this.total = res.data.total
+          }
         })
       },
-        handleCurrentChange()
+        handleCurrentChange(currentPage)
         {
-
+          this.currentPage = currentPage
+          this.getData()
         },
-        handleSizeChange()
+        handleSizeChange(pageSize)
         {
-
+          this.pageSize = pageSize
+          this.getData()
         }
     }
 }

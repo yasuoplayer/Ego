@@ -12,22 +12,18 @@
           </el-popover>
         </div>
       </el-form-item>
-      <el-form-item label="颜色">
-        <el-radio-group v-model="form.color" size="small">
-          <el-radio label="红" border>红</el-radio>
-          <el-radio label="蓝" border>蓝</el-radio>
-          <el-radio label="黄" border>黄</el-radio>
+      <el-form-item label="颜色" v-if='data.colors'>
+        <el-radio-group v-model="form.color" size="small" @change='changeColor'>
+          <el-radio  v-for='(item,index) in data.colors' :label="item" border :key='index' >{{item}}</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="内存">
-        <el-radio-group v-model="form.memory" size="small">
-          <el-radio label="16g" border>16g</el-radio>
-          <el-radio label="32g" border>32g</el-radio>
-          <el-radio label="64g" border>64g</el-radio>
+      <el-form-item label="内存" v-if='data.memorys'>
+        <el-radio-group v-model="form.memory" size="small" @change='changeMemory'>
+          <el-radio v-for='(item,index) in data.memorys'  border :label='item' :key='index' :disabled="memorys.indexOf(item)==-1">{{item}}g</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="数量">
-        <el-input-number v-model="form.number" :min="1" :max="10" :step="1" :precision="0"></el-input-number>
+        <el-input-number v-model="form.number" :min="1" :max="number" :step="1" :precision="0"></el-input-number>
       </el-form-item>
 
       <el-form-item label="总价格">
@@ -49,29 +45,78 @@ export default {
   data() {
     return {
       form: {
-        name:'HUAWEI/华为Mate 20 Pro 亮黑色（UD）8GB+128GB 屏下指纹版麒麟980芯片全面屏徕卡三摄移动联通电信4G全网通手机',
-        price: 5499,
+        name:'',
+        price: 0,
         memory: "",
         number: 1,
         color: "",
-        brand:'华为'
-      }
+        brand:''
+      },
+      memorys:[],
+      colors:[],
+      number:0,
+      data:{}
     };
   },
-  props: {
-    id: {
-      require: true
-    }
-  },
-  mounted() {
-    console.log(this.id);
-  },
   methods: {
+    changeColor(color)
+    {
+        var memorys = []
+        var config = this.data.config
+        for(var n=0;n<config.length;n++)
+        {
+            if(config[n].color == this.form.color)
+            {
+              memorys.push(config[n].memory)
+            }
+        }
+        this.memorys = memorys
+        if(this.colors.indexOf(color)>-1)
+        {
+          this.form.memory = ''
+        }       
+    },
+    changeMemory(memory)
+    {
+      var config = this.data.config
+        for(var n=0;n<config.length;n++)
+        {
+            if(config[n].color == this.form.color && config[n].memory == memory)
+            {
+              this.number = config[n].number
+              this.form.number=1
+              this.form.price = config[n].price
+              break
+            }
+        }      
+    },    
+    setData(data)
+    {
+      this.data = {...data}
+      this.setDefaultOption(this.data.defaultOption)
+    },
+    setDefaultOption(data)
+    {
+      if(data.number)
+      {
+      this.form.price = data.price
+      this.number = data.number
+      this.form.memory = data.memory
+      this.form.color = data.color
+      this.form.name = this.data.name 
+      this.form.brand = this.data.brand
+      this.form.number = 0
+      this.colors = this.data.colors
+      this.memorys = this.data.memorys
+      this.changeColor('')
+      }
+      
+    },
     addCart(flg) {
       if(!this.$store.state.userMsg.user)
       {
         this.$message({
-          message: `请先选择warning哦`,
+          message: `请先填写购买信息哦`,
           type: "warning"
       })
       this.$router.push('/login')
@@ -115,7 +160,7 @@ export default {
               isBuy:false,
               inCart:true,
               commentTime:'',
-              goodId:'0'
+              goodId:this.data._id
             }
           }).then(res=>{
             this.$message({

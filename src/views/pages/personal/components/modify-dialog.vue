@@ -14,21 +14,17 @@
         </div>
       </el-form-item>
       <el-form-item label="颜色">
-        <el-radio-group v-model="formData.color" size="small">
-          <el-radio label="红" border>红</el-radio>
-          <el-radio label="蓝" border>蓝</el-radio>
-          <el-radio label="黄" border>黄</el-radio>
+        <el-radio-group v-model="formData.color" size="small" @change='changeColor'>
+          <el-radio  v-for='(item,index) in data.colors' :key='index' :label="item" border >{{item}}</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="内存">
-        <el-radio-group v-model="formData.memory" size="small">
-          <el-radio label="16g" border>16g</el-radio>
-          <el-radio label="32g" border>32g</el-radio>
-          <el-radio label="64g" border>64g</el-radio>
+        <el-radio-group v-model="formData.memory" size="small" @change='changeMemory'>
+          <el-radio v-for='(item,index) in data.memorys' :key='index'   :label="item" border :disabled="memorys.indexOf(item)==-1">{{item}}g</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="数量">
-        <el-input-number v-model="formData.number" :min="1" :max="10" :step="1" :precision="0"></el-input-number>
+        <el-input-number v-model="formData.number" :min="0" :max="number" :step="1" :precision="0"></el-input-number>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -44,14 +40,84 @@ export default {
     {
         return {
             dialogVisible:false,
-            formData:{}
+            formData:{},
+            number:1,
+            data:{},
+            memorys:[],
+            // colors:[]
         }
     },
     methods:{
+    changeColor(color)
+    {
+        var memorys = []
+        var config = this.data.config
+        for(var n=0;n<config.length;n++)
+        {
+            if(config[n].color == this.formData.color)
+            {
+              memorys.push(config[n].memory)
+            }
+        }
+        this.memorys = memorys
+        if(this.data.colors.indexOf(color)!=-1)
+        {
+          this.formData.memory = '' 
+          this.formData.number=0
+        }
+    },
+    changeMemory(memory)
+    {
+      var config = this.data.config
+        for(var n=0;n<config.length;n++)
+        {
+            if(config[n].color == this.formData.color && config[n].memory == memory)
+            {
+              this.number = config[n].number
+              this.formData.number=0
+              this.formData.price=config[n].price
+              break
+            }
+        }      
+    },
+    getData(_id)
+    {
+        this.$axios({
+          url:'/ego/good/findById',
+          method:'get',
+          params:{
+            _id
+          }
+        }).then(res=>{
+            this.data = res.data.data
+            this.handleData(this.data)
+            this.changeColor('')
+        })
+    },
+    handleData(data)
+    {
+            var colors =[]
+            var memorys =[]
+            var config = data.config
+            for(var n=0;n<config.length;n++)
+            {
+                if(colors.indexOf(config[n].color)==-1)
+                {
+                    colors.push(config[n].color)
+                }
+                if(memorys.indexOf(config[n].memory)==-1)
+                {
+                    memorys.push(config[n].memory)
+                }           
+            }
+            data.memorys = memorys
+            data.colors = colors
+    },
         controlDialog(obj)
         {
             this.dialogVisible = obj.flag
             this.formData = obj.data
+            this.getData(obj.data.goodId)
         },
                 cancel(){
             this.dialogVisible = false

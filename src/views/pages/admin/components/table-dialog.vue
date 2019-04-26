@@ -33,6 +33,7 @@ export default {
         price: "",
         number: "1"
       },
+      index:-1,
       dialogVisible: false,
       mode:'add',
       title:'新增参数'
@@ -43,6 +44,7 @@ export default {
       this.dialogVisible = obj.flag;
       this.formData = obj.data;
       this.mode = obj.mode
+      this.index = obj.index
       if(obj.mode=='add')
       {
           this.title = '新增参数'
@@ -60,7 +62,10 @@ export default {
         message: "操作成功",
         type: "success"
       });
-      this.$emit('addRow',this.formData)
+      this.$emit('addRow',{
+        data:this.formData,
+        index:this.index
+      })
       this.dialogVisible = false;
     },
     resetFrom()
@@ -71,6 +76,7 @@ export default {
         price: "",
         number: "1"
       }
+      this.index = -1
     }
   }
 };

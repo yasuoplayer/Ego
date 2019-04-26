@@ -7,7 +7,7 @@
       <el-table-column label="商品品牌" prop="brand"></el-table-column>
       <el-table-column align="right">
         <template slot="header" slot-scope="scope">
-          <el-input v-model="key" size="mini" placeholder="输入关键字搜索" clearable/>
+          <el-input v-model="key" size="mini" placeholder="输入关键字搜索" clearable @keyup.enter.native="getData"/>
         </template>
         <template slot-scope="scope">
           <div class="row-ctrl">
@@ -144,10 +144,10 @@ export default {
       this.currentPage = currentPage;
       this.getData();
     },
-    handleEdit(data) {
+    handleEdit(data,index) {
       this.$refs.modifyDialog.controlDialog({
         flag: true,
-        data
+        data:{...data},
       });
     },
     handleDelete(data) {
@@ -165,6 +165,7 @@ export default {
             }
           }).then(res => {
             if (res.data.code) {
+              this.getData();
               this.$message({
                 type: "success",
                 message: "下架成功!"

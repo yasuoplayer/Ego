@@ -1,28 +1,28 @@
 <template>
-        <div class="phone-list">
+        <div class="phone-list" v-loading='loading'>
         <el-row :gutter="4" >
-              <el-col :span="6"  class="row" v-for="item in 4" :key="item">
+              <el-col :span="6"  class="row" v-for="(item,index) in list" :key="index">
             <el-card shadow="hover" class="card" >
-            <img v-lazy="list[0].img"  class="img"/>
-            <div class="name" :title="list[0].name">
-                {{list[0].name}}
+            <img v-lazy="'http://localhost:3000/'+item.img"  class="img"/>
+            <div class="name" :title="item.name">
+                {{item.name}}
             </div>
             <div class="price">
-                ￥<span class="price-number">{{list[0].price}}</span>.00
+                ￥<span class="price-number">{{item.minPrice}}</span>.00
             </div>
               <el-row :gutter="2">
                 <el-col :span="8">
                     <div class="sales-volume">
-                        总销量:<span class="sales-volume-number">{{list[0].salesVolume}}</span>
+                        总销量:<span class="sales-volume-number">{{item.salesVolume}}</span>
                     </div>
                 </el-col>
                                 <el-col :span="8">
                     <div class="rate">
-                        评分:<span class="rate-number">{{list[0].rate}}</span>
+                        评分:<span class="rate-number">{{item.average}}</span>
                     </div>
                 </el-col>
                     <el-col :span="8">
-                    <el-button round  type="text" size='mini' @click="showDetail(list[0].id)">查看详情</el-button>
+                    <el-button round  type="text" size='mini' @click="showDetail(item._id)">查看详情</el-button>
                 </el-col>
             </el-row>
             </el-card>
@@ -36,7 +36,7 @@
       @current-change="handleCurrentChange"
       :current-page="currentPage"
       :page-sizes="pageSizes"
-      :page-size="5"
+      :page-size="pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total">
     </el-pagination>
@@ -62,21 +62,51 @@ export default {
             ],
             currentPage:1,
             total:40,
-            pageSizes:[5, 10, 20, 40]
+            pageSizes:[5, 10, 20, 40],
+            pageSize:5,
+            filterData:{},
+            loading:false
         }
     },
     methods:{
-        handleSizeChange(val)
+        handleSizeChange(pageSize)
         {
-            console.log(val)
+            this.pageSize = pageSize
+            this.getData()
         },
-        handleCurrentChange(val)
+        handleCurrentChange(currentPage)
         {
-            console.log(val)
+            this.currentPage = currentPage
+            this.getData()
         },
         showDetail(id)
         {
             this.$router.push('/detail/'+id)
+        },
+        setData(obj)
+        {
+            this.filterData = {...obj}
+            this.getData()
+        },
+        getData()
+        {
+            this.loading = true
+            this.list=[]
+            this.$axios({
+                url:'/ego/good/find',
+                method:'get',
+                params:{
+                    pageSize:this.pageSize,
+                    currentPage:this.currentPage,
+                    key:this.filterData.key,
+                    filter:this.filterData.filter
+                }
+            }).then(res=>{
+                // console.log(res.data.data)
+                this.list = res.data.data
+                this.total = res.data.total
+                this.loading = false
+            })
         }
     }
 }

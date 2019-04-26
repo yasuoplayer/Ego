@@ -44,7 +44,7 @@
           <span class="price-number">{{totalPrice}}</span>.00
         </div>
         <div class="buy">
-          <el-button type="primary" @click="buy">结账</el-button>
+          <el-button type="primary" @click="buy" :disabled="!selections.length">结账</el-button>
         </div>
       </div>
     </div>
@@ -70,7 +70,7 @@ export default {
       tableData: [],
       currentPage: 1,
       pageSizes: [5, 10, 15, 20],
-      total: 21,
+      total: 0,
       key: "",
       totalPrice: 0,
       pageSize: 5,
@@ -218,7 +218,8 @@ export default {
       this.getData()
     },
     buy() {
-      this.$confirm("波记 广东深圳宝安 1341111111111", "当前收货人信息是", {
+      var userMsg = this.$store.state.userMsg
+      this.$confirm(`${userMsg.user} ${userMsg.province} ${userMsg.city} ${userMsg.area} ${userMsg.more} ${userMsg.phone}`, "当前收货人信息是", {
         distinguishCancelAndClose: true,
         confirmButtonText: "信息无误，确认购买",
         cancelButtonText: "信息有误，前往修改"

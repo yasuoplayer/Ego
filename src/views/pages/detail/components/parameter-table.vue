@@ -1,13 +1,9 @@
 <template>
     <div class="parameter-table">
                 <table border class="table">
-          <tr>
-            <td class="title">品牌</td>
-            <td class="msg">华为</td>
-          </tr>
-          <tr>
-            <td class="title">内存</td>
-            <td class="msg">16g/32g/64g</td>
+          <tr v-for='(item,index) in tableData' :key='index'>
+            <td class="title">{{item.attribute}}</td>
+            <td class="msg">{{item.val}}</td>
           </tr>
         </table>
     </div>
@@ -16,7 +12,31 @@
 export default {
     name:'parameter-table',
     data(){
-        return {}
+        return {
+          goodId:'',
+          tableData:[]
+        }
+    },
+    mounted()
+    {
+      this.goodId = this.$route.params.id
+      this.getData()
+    },
+    methods:
+    {
+      getData()
+      {
+        this.$axios({
+          url:'/ego/config/getByGoodId',
+          method:'post',
+          data:{
+            goodId:this.goodId
+          }
+        }).then(res=>{
+          console.log(res.data)
+          this.tableData = res.data.data.config
+        })
+      }
     }
 }
 </script>

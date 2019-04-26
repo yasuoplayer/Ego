@@ -2,7 +2,7 @@
     <div class="detail">
         <div class="base">
             <vue-photo-zoom-pro class="img" :scale='1.5'   :url="img"></vue-photo-zoom-pro >
-            <commodityOption :id="id"/>
+            <commodityOption  ref='commodityOption'/>
         </div>
         <phoneParameter/>
         
@@ -21,7 +21,6 @@ export default {
     {
         return {
             img,
-            id:''
         }
     },
     components:{
@@ -31,6 +30,49 @@ export default {
     mounted()
     {
         this.id = this.$route.params.id
+        this.getData()
+    },
+    methods:{
+        getData()
+        {
+            this.$axios({
+                url:'/ego/good/findById',
+                params:{
+                    _id:this.id
+                }
+            }).then(res=>{
+                this.img='http://localhost:3000/'+res.data.data.img
+                this.$refs.commodityOption.setData(this.handleData(res.data.data))
+            })
+        },
+        handleData(data)
+        {
+            var isDefult = false
+            var colors =[]
+            var memorys =[]
+            var config = data.config
+            var defaultOption = {}
+            for(var n=0;n<config.length;n++)
+            {
+                if(colors.indexOf(config[n].color)==-1)
+                {
+                    colors.push(config[n].color)
+                }
+                if(memorys.indexOf(config[n].memory)==-1)
+                {
+                    memorys.push(config[n].memory)
+                }
+                if(!isDefult)
+                {
+                    if(config[n].number>0)
+                    defaultOption = {...config[n]}
+                }                
+            }
+            data.memorys = memorys
+            data.colors = colors
+            data.defaultOption = defaultOption
+            return data
+        }
     }
     
 }

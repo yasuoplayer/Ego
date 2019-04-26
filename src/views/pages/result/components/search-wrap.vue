@@ -2,7 +2,6 @@
   <div class="search-wrap">
     <div class="title">
       筛选条件：
-      <el-tag class="tag" v-for="(tag,index) in tags" :key="index" closable @close='deleteTag(tag.type)'>{{tag.val}}</el-tag>
     </div>
     <ul class="filter">
       <li class="filter-list" v-for="(listItem,index) in fileterMsg" :key="index">
@@ -10,7 +9,7 @@
         <el-radio-group
           v-model="filter[listItem.type]"
           v-if="listItem.type!='sort'"
-          @change="change(listItem.type)"
+          @change="change"
         >
           <el-radio v-for="(item,i) in listItem.list" :key="i" :label="item">{{item}}</el-radio>
         </el-radio-group>
@@ -18,7 +17,7 @@
           v-model="filter[listItem.type]"
           size="small"
           v-else
-          @change="change(listItem.type)"
+          @change="change"
         >
           <el-radio-button v-for="(item,i) in listItem.list" :key="i" :label="item">{{item}}</el-radio-button>
         </el-radio-group>
@@ -31,7 +30,7 @@ var fileterMsg = [
   {
     title: "品牌",
     type: "brand",
-    list: ["苹果", "小米", "华为" ,"全部品牌"]
+    list: ["苹果", "小米", "华为","其他" ,"全部品牌"]
   },
   {
     title: "价格",
@@ -50,49 +49,11 @@ export default {
     return {
       filter: { brand: "全部品牌", price: "全部价格", sort: "默认排序" },
       fileterMsg,
-      tags: []
     };
   },
   methods: {
-    deleteTag(
-      type //删除tag
-    ) {
-      for (var n = 0; n < this.tags.length; n++) {
-        if (this.tags[n].type == type) {
-          this.tags.splice(n, 1);
-          break;
-        }
-      }
-    },
-    change(type) {
-        // console.log(type, this.filter[type]);
-      if (
-        this.filter[type] == "全部价格" ||
-        this.filter[type] == "默认排序" ||
-        this.filter[type] == "全部品牌"
-      ) {
-        this.deleteTag(type);
-        return;
-      }
-      var isFind = false; //当所选值不为全部的时候
-      for (var n = 0; n < this.tags.length; n++) {
-        if (this.tags[n].type == type) {
-            this.tags.splice(n, 1);
-          this.tags.push({
-            type,
-            val: this.filter[type]
-          });
-          isFind = true;
-          break;
-        }
-      }
-      if (isFind) return;
-      else {
-        this.tags.push({
-          type,
-          val: this.filter[type]
-        });
-      }
+    change() {
+      this.$emit('filterChange',this.filter)
     }
   }
 };

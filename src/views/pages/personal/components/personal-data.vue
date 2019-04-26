@@ -1,20 +1,20 @@
 <template>
   <div class="personal-data">
-    <el-form label-position="left" label-width="80px" :model="form" class="form">
+    <el-form label-position="right" label-width="80px" :model="form" class="form"  :rules="rules" >
       <div class="form-title">个人信息</div>
       <el-form-item label="用户帐号">
         <el-input v-model="form.user" disabled></el-input>
       </el-form-item>
-      <el-form-item label="用户手机">
+      <el-form-item label="用户手机" prop="phone">
         <el-input v-model="form.phone" clearable></el-input>
       </el-form-item>
-      <el-form-item label="用户邮箱">
+      <el-form-item label="用户邮箱" prop="email">
         <el-input v-model="form.email" clearable></el-input>
       </el-form-item>
-      <el-form-item label="用户密码">
-        <el-input v-model="form.psw" type="password" clearable show-password></el-input>
+      <el-form-item label="用户密码" prop="psw">
+        <el-input v-model="form.psw" type="password" clearable show-password placeholder="以字母开头，长度在6~18之间，只能包含字母、数字和下划线"></el-input>
       </el-form-item>
-      <el-form-item label="用户地区">
+      <el-form-item label="用户地区" required>
         <mtv-province
           useElementUI
           ref="mtvProvince"
@@ -24,7 +24,7 @@
           :city="form.city"
         ></mtv-province>
       </el-form-item>
-      <el-form-item label="详细地点">
+      <el-form-item label="详细地点" prop="more">
         <el-input
           type="textarea"
           :rows="3"
@@ -62,6 +62,53 @@ import MtvProvince from "moretv-province";
 export default {
   name: "personalData",
   data() {
+
+      var validatePass = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入密码'));
+        } else {
+          var reg = /^[a-zA-Z]\w{5,17}$/
+          if(reg.test(value))
+          {
+             callback();
+          }
+          else{
+            callback(new Error('密码不符合条件'));
+          }
+        }
+      };
+         var validateEmail = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入邮箱'));
+        } else {
+          var reg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
+          if(reg.test(value))
+          {
+            callback();
+          }
+          else{
+            callback(new Error('请输入正确邮箱格式'));
+          }
+          
+        }
+      };
+      
+            var validatePhone = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入手机号码'));
+        } else {
+          var reg = /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/
+          if(reg.test(value))
+          {
+            callback();
+          }
+          else{
+            callback(new Error('请输入手机号码格式'));
+          }
+          
+        }
+      };
+
     return {
       form: {
         user: "",
@@ -73,7 +120,22 @@ export default {
         area: "",
         more: "",
         money: 0
-      }
+      },
+       rules: {
+          more: [
+            { required: true, message: '请输入详细地址', trigger: 'blur' },
+            { min: 0, max: 30, message: '长度小于三十字符', trigger: 'blur' }
+          ],
+          psw:[
+            { validator: validatePass, trigger: 'blur',required: true }
+          ],
+                    email:[
+            { validator: validateEmail, trigger: 'blur' }
+          ],
+                    phone:[
+            { validator: validatePhone, trigger: 'blur',required: true }
+          ]
+        }
     };
   },
   components: { MtvProvince },
