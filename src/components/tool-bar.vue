@@ -12,16 +12,17 @@
       <span class="cart">购物车</span>
     </li>
     <li class="tool-bar-item" v-if="userName&&!isAdmin">
-      <el-dropdown :show-timeout="50" :hide-timeout="50">
+      <el-dropdown :show-timeout="50" :hide-timeout="50" @command="handleCommand">
         <span class="el-dropdown-link">
           我的订单
           <i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
-          <!-- <el-dropdown-item>待支付</el-dropdown-item> -->
-          <el-dropdown-item>待收货</el-dropdown-item>
-          <el-dropdown-item>已收货</el-dropdown-item>
-          <!-- <el-dropdown-item>待评价</el-dropdown-item> -->
+          <el-dropdown-item command="1">已发货</el-dropdown-item>
+          <el-dropdown-item command='2'>未发货</el-dropdown-item>
+          <el-dropdown-item command='3'>已签收</el-dropdown-item>
+          <el-dropdown-item command='4'>未签收</el-dropdown-item>
+          <el-dropdown-item command='5'>全部</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </li>
@@ -66,6 +67,10 @@ export default {
     goCart()
     {
       this.$router.push("/personal/cart");
+    },
+    handleCommand(command)
+    {
+      this.$router.push("/personal/order/"+command);
     }
   }
 };

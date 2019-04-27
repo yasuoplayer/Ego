@@ -1,5 +1,5 @@
 <template>
-  <div class="personal-data">
+  <div class="personal-data" v-loading='loading'>
     <el-form label-position="right" label-width="80px" :model="form" class="form"  :rules="rules" >
       <div class="form-title">个人信息</div>
       <el-form-item label="用户帐号">
@@ -39,7 +39,7 @@
         <el-button type="primary" @click="save">保存</el-button>
       </el-form-item>
     </el-form>
-    <div class="money-wrap">
+    <div class="money-wrap" >
       <el-card shadow="hover">
         <div slot="header" class="clearfix">
           <span>账户余额</span>
@@ -50,8 +50,8 @@
           <span class="symbol">.00</span>
         </div>
         <div class="clearfix">
-          <el-button type="text" class="fl" @click="handleMoney('+')">充值</el-button>
-          <el-button type="text" class="fr" @click="handleMoney('-')">提现</el-button>
+          <el-button type="text" class="fl" @click="handleMoney('+')" >充值</el-button>
+          <el-button type="text" class="fr" @click="handleMoney('-')" >提现</el-button>
         </div>
       </el-card>
     </div>
@@ -110,6 +110,7 @@ export default {
       };
 
     return {
+      loading:false,
       form: {
         user: "",
         phone: "",
@@ -144,7 +145,9 @@ export default {
   },
   methods: {
     getUserMsg() {
+      this.loading=true
       this.form = this.$store.state.userMsg;
+      this.loading=false
     },
     handleMoney(flag) {
       this.$prompt("请输入金额", "提示", {
@@ -167,6 +170,7 @@ export default {
             }
             money = parseInt(this.form.money) - parseInt(value);
           }
+          this.loading=true
           this.$axios({
             url: "/ego/user/updateMoney",
             method: "post",
@@ -176,6 +180,7 @@ export default {
             }
           }).then(res => {
             if (res.data.code) {
+              this.loading=false
               this.$message({
                 type: "success",
                 message: "操作成功"
@@ -208,12 +213,14 @@ export default {
         area: this.form.area,
         more: this.form.more
       };
+      this.loading=true
       this.$axios({
         url: "/ego/user/update",
         method: "post",
         data: obj
       }).then(res => {
         if (res.data.code) {
+          this.loading=false
           this.$message({
             message: "更新成功",
             type: "success"

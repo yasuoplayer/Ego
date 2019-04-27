@@ -62,6 +62,13 @@ export default {
         message: "操作成功",
         type: "success"
       });
+      if(this.formData.number<10)
+      {
+        this.formData.state = 'warning'
+      }
+      else{
+        delete this.formData.state
+      }
       this.$emit('addRow',{
         data:this.formData,
         index:this.index

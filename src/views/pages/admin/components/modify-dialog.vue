@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="编辑商品" :visible.sync="dialogVisible" width="70%" @close="reset">
+  <el-dialog title="编辑商品" :visible.sync="dialogVisible" width="70%" @close="reset" v-loading='loading'>
     <el-form ref="form" :model="formData" label-width="80px">
       <el-form-item label="商品名称">
         <el-input v-model="formData.name"></el-input>
@@ -27,7 +27,7 @@
         </el-upload>
       </el-form-item>
       <el-form-item label="商品配置">
-        <el-table :data="tableData" border stripe style="width: 100%">
+        <el-table :data="tableData" border stripe  :row-class-name="tableRowClassName">
           <el-table-column prop="color" label="颜色" width="180"></el-table-column>
           <el-table-column prop="memory" label="内存" width="180"></el-table-column>
           <el-table-column prop="price" label="价格"></el-table-column>
@@ -58,6 +58,7 @@ export default {
   data() {
     return {
       dialogVisible: false,
+      loading:false,
       formData: {
         name: "",
         
@@ -117,7 +118,29 @@ export default {
       this.formData = { ...obj.data };
       if (this.formData._id) {
         this.imageUrl = "http://localhost:3000/" + this.formData.img;
-        this.tableData = [...this.formData.config]
+        this.tableData = this.handleData([...this.formData.config])
+      }
+    },
+    handleData(data)
+    {
+      for(var n=0;n<data.length;n++)
+      {
+        if(data[n].number<10)
+        {
+          data[n].state = 'warning'
+          break
+        }
+      }
+      return data
+    },
+    tableRowClassName({row})
+    {
+            if(row.state=='warning')
+      {
+return 'warning-row'
+      }
+      else{
+        return ''
       }
     },
     cancel() {
@@ -140,21 +163,18 @@ export default {
       formData.append("name", this.formData.name);
       formData.append("brand", this.formData.brand);
 
-      // var arr = []
-      // for(var n=this.tableData.length-1;n>-1;n--)
-      // {
-      //   var color  = this.tableData[n].color
-      //   if(arr.indexOf(color)>-1)
-      //   {
-      //       this.tableData.splice(n,1)
-      //   }
-      //   else{
-      //     arr.push(color)
-      //   }
-      // }
+
+      for(var n=0;n<this.tableData.length;n++)
+      {
+        if(this.tableData[n].state)
+        {
+          delete this.tableData[n].state
+        }
+      }
 
 
       formData.append("config", JSON.stringify(this.tableData));
+      this.loading=true
       this.$axios({
         url: "/ego/good/add",
         method: "post",
@@ -162,6 +182,7 @@ export default {
         headers: { "Content-Type": "multipart/form-data" }
       }).then(res => {
         if (res.data.code) {
+          this.loading=false
           this.$emit("update");
           this.$message({
             message: "操作成功",
@@ -191,7 +212,7 @@ export default {
       }
 
     },
-    handleAvatarChange(file, fileList) {
+    handleAvatarChange(file) {
       this.changeImg = true
       var _this = this
       var fr = new FileReader()

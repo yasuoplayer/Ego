@@ -1,13 +1,14 @@
 <template>
-  <div class="goods">
+  <div class="goods" v-loading='loading'>
     <div class="title">已上架商品</div>
-    <el-table :data="tableData" border stripe @selection-change="handleSelectionChange">
+    <el-table :data="tableData" border stripe @selection-change="handleSelectionChange"  :row-class-name="tableRowClassName">
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column label="商品名称" prop="name"></el-table-column>
       <el-table-column label="商品品牌" prop="brand"></el-table-column>
       <el-table-column align="right">
-        <template slot="header" slot-scope="scope">
-          <el-input v-model="key" size="mini" placeholder="输入关键字搜索" clearable @keyup.enter.native="getData"/>
+        <template slot="header" >
+          <el-input v-model="key" size="mini" placeholder="输入关键字搜索" clearable    @keyup.native="getData"
+            debounce/>
         </template>
         <template slot-scope="scope">
           <div class="row-ctrl">
@@ -50,7 +51,8 @@ export default {
       total: 40,
       tableData: [],
       key: "",
-      selections: []
+      selections: [],
+      loading:false
     };
   },
   components: {
@@ -61,7 +63,18 @@ export default {
     this.getData();
   },
   methods: {
+    tableRowClassName({row})
+    {
+      if(row.state=='warning')
+      {
+return 'warning-row'
+      }
+      else{
+        return ''
+      }
+    },
     getData() {
+      this.loading=true
       this.$axios({
         url: "/ego/good/all",
         params: {
@@ -70,9 +83,25 @@ export default {
           key: this.key
         }
       }).then(res => {
-        this.tableData = res.data.data;
+        this.loading=false
+        this.tableData = this.handleData(res.data.data);
         this.total = res.data.total;
       });
+    },
+    handleData(data)
+    {
+      for(var n=0;n<data.length;n++)
+      {
+        var config = data[n].config
+        for(var j=0;j<config.length;j++)
+        {
+          if(config[j].number<10)
+          {
+            data[n].state = 'warning'
+          }
+        }
+      }
+      return data
     },
     handleExplain(data) {
       this.$refs.explainDialog.controlDialog({
@@ -86,6 +115,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+          this.loading=true
       this.$axios({
         url: "/ego/good/deleteByIds",
         method: "post",
@@ -94,6 +124,7 @@ export default {
         }
       }).then(res => {
         if (res.data.code) {
+          this.loading=false
           this.getData();
           this.$message({
             type: "success",
@@ -102,6 +133,7 @@ export default {
         }
       });
         }).catch(() => {
+          this.loading=false
           this.$message({
             type: 'info',
             message: '已取消下架'
@@ -116,11 +148,13 @@ export default {
         type: "warning"
       })
         .then(() => {
+          this.loading=true
           this.$axios({
             url: "/ego/good/deleteAll"
           }).then(res => {
             if (res.data.code == 1) {
               this.currentPage = 1;
+              this.loading=false
               this.getData();
               this.$message({
                 type: "success",
@@ -130,6 +164,7 @@ export default {
           });
         })
         .catch(() => {
+          this.loading=false
           this.$message({
             type: "info",
             message: "已取消下架"
@@ -144,7 +179,7 @@ export default {
       this.currentPage = currentPage;
       this.getData();
     },
-    handleEdit(data,index) {
+    handleEdit(data) {
       this.$refs.modifyDialog.controlDialog({
         flag: true,
         data:{...data},
@@ -157,6 +192,7 @@ export default {
         type: "warning"
       })
         .then(() => {
+          this.loading=true
           this.$axios({
             url: "/ego/good/deleteById",
             method: "post",
@@ -165,6 +201,7 @@ export default {
             }
           }).then(res => {
             if (res.data.code) {
+              this.loading=false
               this.getData();
               this.$message({
                 type: "success",
@@ -174,6 +211,7 @@ export default {
           });
         })
         .catch(() => {
+          this.loading=false
           this.$message({
             type: "info",
             message: "已取消下架"

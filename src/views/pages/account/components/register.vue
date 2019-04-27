@@ -1,5 +1,5 @@
 <template>
-      <div class="register-form" >
+      <div class="register-form" v-loading='loading'>
         <div class="title">快速注册</div>
         <el-form :model="form" :rules="rules" ref="form" label-width="50px">
           <el-form-item prop="user">
@@ -49,7 +49,8 @@ export default {
       rules: {
         psw: [{ validator: validatePass, trigger: "blur" }],
         user: [{ validator: validateUser, trigger: "blur" }]
-      }
+      },
+      loading:false
     };
   },
   mounted() {
@@ -64,6 +65,7 @@ export default {
     submitForm() {
       this.$refs.form.validate(valid => {
         if (valid) {
+          this.loading=true
           this.$axios({
             url:'/ego/user/register',
             method:'post',
@@ -71,6 +73,7 @@ export default {
           }).then(res=>{
             if(res.data.code)
             {
+              this.loading=false
               this.$message({
                 type:'success',
                 message:res.data.msg
@@ -78,6 +81,7 @@ export default {
               this.toggleLogin()
             }
             else{
+              this.loading=false
               this.$message({
                 type:'error',
                 message:res.data.msg

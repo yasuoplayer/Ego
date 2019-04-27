@@ -60,4 +60,18 @@ a{
     height: 178px;
     display: block;
   }
+
+
+  .search-wrap .el-input.el-input--suffix {
+    width: 130px;
+  }
+  .input-with-select .el-input-group__prepend {
+    background-color: #fff;
+  }
+  .el-input.el-input--mini.el-input--suffix{
+    width: 100%;
+  }
+    .el-table .warning-row {
+    background: oldlace;
+  }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="expain-dialog">
-    <el-dialog :title="title" :visible.sync="dialogVisible" @close='reset'>
+    <el-dialog :title="title" :visible.sync="dialogVisible" @close='reset' v-loading='loading'>
 <el-table
     :data="tableData"
     border
@@ -50,7 +50,8 @@ export default {
       formData: {
       },
       dialogVisible: false,
-      title:'参数说明'
+      title:'参数说明',
+      loading:false
     };
   },
   methods: {
@@ -70,6 +71,7 @@ export default {
     },
     getData(goodId)
     {
+      this.loading=true
       this.$axios({
         method:'post',
         url:'/ego/config/getByGoodId',
@@ -77,6 +79,7 @@ export default {
           goodId
         }
       }).then(res=>{
+        this.loading=false
         this.tableData = res.data.data.config || []
       })
     },
@@ -96,7 +99,7 @@ export default {
           arr.push(attribute)
         }
       }
-
+      this.loading=true
       this.$axios({
         url:'/ego/config/add',
         method:'post',
@@ -107,6 +110,7 @@ export default {
       }).then(res=>{
         if(res.data.code)
         {
+
       this.$message({
         message: res.data.msg,
         type: "success"
@@ -118,7 +122,7 @@ export default {
         type: "error"
       })         
         }
-
+      this.loading=false
       this.dialogVisible = false;
       })
     },

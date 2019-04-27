@@ -2,6 +2,7 @@
     <el-dialog
   title="修改订单"
   :visible.sync="dialogVisible"
+  v-loading='loading'
   >
     <el-form label-position="left" label-width="70px" :model="formData">
         <el-form-item label="商品名称">
@@ -44,7 +45,7 @@ export default {
             number:1,
             data:{},
             memorys:[],
-            // colors:[]
+            loading:false
         }
     },
     methods:{
@@ -82,6 +83,7 @@ export default {
     },
     getData(_id)
     {
+      this.loading=true
         this.$axios({
           url:'/ego/good/findById',
           method:'get',
@@ -92,6 +94,7 @@ export default {
             this.data = res.data.data
             this.handleData(this.data)
             this.changeColor('')
+            this.loading=false
         })
     },
     handleData(data)
@@ -126,13 +129,15 @@ export default {
         comfirmForm()
         {
           this.formData.money = this.formData.number * this.formData.price
+          this.loading=true
           this.$axios({
             url:'/ego/record/updateById',
             method:'post',
             data:this.formData
           }).then(res=>{
-            if(res.data.code==1)
+            if(res.data.code)
             {
+              this.loading=false
               this.$message({
                   message:'修改成功',
                   type:'success'

@@ -1,5 +1,5 @@
 <template>
-      <div class="login-form" >
+      <div class="login-form" v-loading='loading'>
         <div class="title">欢迎登录</div>
         <el-form :model="form" :rules="rules" ref="form" label-width="50px">
           <el-form-item prop="user">
@@ -49,7 +49,8 @@ export default {
       rules: {
         psw: [{ validator: validatePass, trigger: "blur" }],
         user: [{ validator: validateUser, trigger: "blur" }]
-      }
+      },
+      loading:false
     };
   },
   props:{
@@ -62,8 +63,10 @@ export default {
   },
   methods: {
     submitForm() {
+
       this.$refs.form.validate(valid => {
         if (valid) {
+          this.loading=true
           this.$axios({
             method:'post',
             url:'/ego/user/login',
@@ -71,6 +74,7 @@ export default {
           }).then(res=>{
              if(res.data.code)
             {
+              this.loading=false
               this.$message({
                 type:'success',
                 message:res.data.msg
@@ -79,6 +83,7 @@ export default {
               this.$router.push("/");
             }
             else{
+              this.loading=false
               this.$message({
                 type:'error',
                 message:res.data.msg

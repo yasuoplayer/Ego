@@ -1,23 +1,33 @@
 <template>
-    <div class="order-management">
+    <div class="order-management" v-loading='loading'> 
         <div class="title">订单管理</div>
+        <div class="search-wrap">
+          <el-input placeholder="请输入内容" v-model="key" >
+    <el-select v-model="state" slot="prepend" placeholder="请选择">
+      <el-option label="已发货" value="已发货"></el-option>
+      <el-option label="未发货" value="未发货"></el-option>
+      <el-option label="已签收" value="已签收"></el-option>
+      <el-option label="未签收" value="未签收"></el-option>
+      <el-option label="全部" value="全部"></el-option>
+    </el-select>
+    <el-button slot="append" icon="el-icon-search" @click="getData" ></el-button>
+  </el-input>
+
+        </div>
+
           <el-table
           border
           stripe
     :data="tableData"
-    style="width: 100%">
+    
+    >
     <el-table-column type="expand">
       <template slot-scope="props">
         <el-form label-position="left" inline>
             <el-row :gutter="10">
-                                <!-- <el-col :span="12">
-                        <el-form-item label="订单号">
-                        <span>{{ props.row.id }}</span>
-                        </el-form-item>
-                </el-col> -->
                 <el-col :span="12">
                         <el-form-item label="下单时间">
-                        <span>{{ props.row.time }}</span>
+                        <span>{{ formatTime(props.row.time) }}</span>
                         </el-form-item>
                 </el-col>
                                 <el-col :span="12">
@@ -40,11 +50,6 @@
                         <span>{{ props.row.price }}</span>
                         </el-form-item>
                 </el-col> 
-                <!-- <el-col :span="12">
-                        <el-form-item label="商品数量">
-                        <span>{{ props.row.number }}</span>
-                        </el-form-item>
-                </el-col> -->
                 <el-col :span="12">
                         <el-form-item label="交易金额">
                         <span>{{ props.row.money }}</span>
@@ -89,6 +94,17 @@
       label="交易金额"
       prop="money">
     </el-table-column>
+        <el-table-column
+      label="操作"
+      >
+      <template slot-scope="scope">
+        <div class="bts">
+          <el-button type="text" size="small" @click="handleClick(scope.row)" v-if="!scope.row.isSend">发货</el-button>
+          <el-tag v-if="scope.row.isArrive">完成交易</el-tag>
+          <el-tag v-if="scope.row.isSend&&!scope.row.isArrive">已发货</el-tag>
+          </div>
+      </template>
+    </el-table-column>
   </el-table>
       <el-pagination
       class="pagination"
@@ -112,33 +128,85 @@ export default {
         total:0,
         pageSize:5,
         pageSizes:[5,10,20,40],
-        currentPage:1
+        currentPage:1,
+        state:'',
+        key:'',
+        loading:false
         }
-    },
-    filters:{
-      dataFilter(data)
-      {
-          return data.isBuy
-      }
+        
     },
     mounted()
     {
       this.getData()
     },
     methods:{
+          formatTime(time) {
+      function add0(m) {
+        return m < 10 ? "0" + m : m;
+      }
+      var date;
+      if (time) {
+        date = new Date(time);
+      } else {
+        date = new Date();
+      }
+
+      var y = date.getFullYear();
+      var m = date.getMonth() + 1;
+      var d = date.getDate();
+      var h = date.getHours();
+      var mm = date.getMinutes();
+      var s = date.getSeconds();
+      return (
+        y +
+        "-" +
+        add0(m) +
+        "-" +
+        add0(d) +
+        " " +
+        add0(h) +
+        ":" +
+        add0(mm) +
+        ":" +
+        add0(s)
+      );
+    },
+      handleClick(data)
+      {
+        var newData = {...data}
+        newData.isSend=true
+        this.$axios({
+          url:'/ego/record/updateById',
+          method:'post',
+          data:newData
+        }).then(res=>{
+          if(res.data.code)
+          {
+            this.getData()
+            this.$message({
+              type:'success',
+              message:'发货成功'
+            })
+          }
+        })
+      },
       getData()
       {
+        this.loading = true
         this.$axios({
           url:'/ego/record/all',
           params:{
             pageSize:this.pageSize,
-            currentPage:this.currentPage
+            currentPage:this.currentPage,
+            key:this.key,
+            state:this.state
           }
         }).then(res=>{
           if(res.data.code)
           {
             this.tableData = res.data.data
             this.total = res.data.total
+            this.loading =false
           }
         })
       },
@@ -173,6 +241,16 @@ export default {
 }
 .rate{
     vertical-align: middle
+}
+.bts{
+  text-align: center
+}
+.search-wrap{
+  width: 80%;
+  margin: 10px auto
+}
+.bts{
+  text-align: center
 }
 </style>
 

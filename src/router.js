@@ -64,7 +64,7 @@ export default new Router({
         },
         {
           name:'order',
-          path:'order',
+          path:'order/:command?',
           component:order
         }        
       ]

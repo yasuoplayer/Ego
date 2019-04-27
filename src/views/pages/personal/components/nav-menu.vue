@@ -52,6 +52,20 @@ export default {
       }
     }
   },
+  mounted()
+  {
+          switch (this.$route.name) {
+        case 'order':
+          this.active = '2'
+          break;
+        case 'cart':
+          this.active = '3'
+          break;      
+        default:
+        this.active = '1-1'
+          break;
+      }
+  },
     methods: {
       toggleCollapse()
       {

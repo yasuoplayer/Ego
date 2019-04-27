@@ -39,6 +39,24 @@ export default {
   components:{
       parameterTable,
       comment
+  },
+  mounted()
+  {
+    this.getData(this.$route.params.id)
+  },
+  methods:{
+    getData(_id)
+    {
+      this.$axios({
+        url:'/ego/good/findById',
+        method:'get',
+        params:{
+          _id
+        }
+      }).then(res=>{
+        this.rate = res.data.data.average
+      })
+    }
   }
 };
 </script>

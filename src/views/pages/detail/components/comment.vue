@@ -1,13 +1,13 @@
 <template>
-  <div class="comment">
-    <el-card class="box-card" v-for="o in 4" :key="o" shadow="hover">
-      <div class="text">{{'列表内容 ' + o }}</div>
+  <div class="comment" v-loading='loading'>
+    <el-card class="box-card" v-for="(item,index) in data" :key="index" shadow="hover">
+      <div class="text">{{item.comment }}</div>
       <div class="foot">
         <div class="rate">
-          <el-rate v-model="rate" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate>
+          <el-rate v-model="item.rate" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate>
         </div>
         <div class="userMsg">
-          张三 <span class="time">{{formatTime()}}</span>
+          {{item.user}} <span class="time">{{formatTime(item.comentTime)}}</span>
         </div>
       </div>
     </el-card>
@@ -18,10 +18,29 @@ export default {
   name: "comment",
   data() {
     return {
-      rate: 3
+      rate: 3,
+      loading:false,
+      data:[]
     };
   },
+  mounted()
+  {
+      this.getData(this.$route.params.id)
+  },
   methods: {
+    getData(goodId)
+    {
+      this.$axios({
+        url:'/ego/record/getComment',
+        method:'get',
+        params:{
+          goodId
+        }
+      }).then(res=>{
+        console.log(res.data)
+        this.data = res.data
+      })
+    },
     formatTime(time) {
       function add0(m) {
         return m < 10 ? "0" + m : m;

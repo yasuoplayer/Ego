@@ -2,6 +2,7 @@
     <el-dialog
   title="给商品评个分吧"
   :visible.sync="dialogVisible"
+  v-loading='loading'
   >
   <el-form ref="form" :model="formData" label-position="left" label-width="80px">
               <el-form-item label="留言">
@@ -31,7 +32,8 @@ export default {
             formData:{
                 comment:'',
                 rate:''
-            }
+            },
+            loading:false
         }
     },
     methods:{
@@ -48,6 +50,7 @@ export default {
         {
             this.formData.commentTime=new Date().getTime()
             this.formData.isArrive=true
+            this.loading = true
             this.$axios({
                 url:'/ego/record/signFor',
                 method:'post',
@@ -55,6 +58,7 @@ export default {
             }).then(res=>{
                 if(res.data.code)
                 {
+                    this.loading=false
                     this.$emit('update')
                     this.$message({
                         message:'评论成功',

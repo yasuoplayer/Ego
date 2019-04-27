@@ -1,5 +1,5 @@
 <template>
-    <div class="parameter-table">
+    <div class="parameter-table" v-loading='loading'>
                 <table border class="table">
           <tr v-for='(item,index) in tableData' :key='index'>
             <td class="title">{{item.attribute}}</td>
@@ -14,7 +14,8 @@ export default {
     data(){
         return {
           goodId:'',
-          tableData:[]
+          tableData:[],
+          loading:false
         }
     },
     mounted()
@@ -26,6 +27,7 @@ export default {
     {
       getData()
       {
+        this.loading=true
         this.$axios({
           url:'/ego/config/getByGoodId',
           method:'post',
@@ -33,7 +35,7 @@ export default {
             goodId:this.goodId
           }
         }).then(res=>{
-          console.log(res.data)
+          this.loading=false
           this.tableData = res.data.data.config
         })
       }

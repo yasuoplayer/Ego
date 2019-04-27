@@ -8,6 +8,7 @@
       border
       class="table"
       @selection-change="handleSelectionChange"
+      v-loading="loading"
     >
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column label="商品名称" prop="name" width="120"></el-table-column>
@@ -16,13 +17,14 @@
       <el-table-column prop="number" label="数量" width="120"></el-table-column>
       <el-table-column prop="money" label="总价" width="120"></el-table-column>
       <el-table-column align="right">
-        <template slot="header" slot-scope="scope">
+        <template slot="header" >
           <el-input
             v-model="key"
             size="mini"
             clearable
             placeholder="输入关键字搜索"
-            @keyup.enter.native="getData"
+            @keyup.native="getData"
+            debounce
           ></el-input>
         </template>
         <template slot-scope="scope">
@@ -44,7 +46,7 @@
           <span class="price-number">{{totalPrice}}</span>.00
         </div>
         <div class="buy">
-          <el-button type="primary" @click="buy" :disabled="!selections.length">结账</el-button>
+          <el-button type="primary" @click="buy" :disabled="!selections.length" :loading="loading">结账</el-button>
         </div>
       </div>
     </div>
@@ -74,7 +76,10 @@ export default {
       key: "",
       totalPrice: 0,
       pageSize: 5,
-      selections: []
+      selections: [],
+      loading:false,
+      goodIdArr:[],
+      orderConfigArr:[]
     };
   },
   components: {
@@ -85,6 +90,7 @@ export default {
   },
   methods: {
     getData() {
+      this.loading=true
       this.$axios({
         url: "/ego/record/getCart",
         method: "get",
@@ -97,17 +103,32 @@ export default {
       }).then(res => {
         this.tableData = res.data.data;
         this.total = res.data.total
+        this.loading=false
       });
     },
     handleSelectionChange(selections) {
       var arr = [];
       var totalPrice = 0
-      for (var n = 0; n < selections.length; n++) {
+      var goodIdArr =[]
+      var orderConfigArr = []
+      for (var n = 0; n < selections.length; n++) {    //新建对象
         totalPrice+=selections[n].money
-        arr.push(selections[n]._id);
+        arr.push(selections[n]._id)
+        orderConfigArr.push({
+          color:selections[n].color,
+          memory:selections[n].memory,
+          price:selections[n].price,
+          number:selections[n].number
+        })
+        if(goodIdArr.indexOf(selections[n].goodId)!=-1)
+        {
+          goodIdArr.push(selections[n].goodId)
+        }
       }
-      this.totalPrice = totalPrice
+      this.totalPrice = totalPrice  //总价格
       this.selections = arr;
+      this.goodIdArr = goodIdArr
+      this.orderConfigArr=orderConfigArr
     },
     handleEdit(obj) {
       this.$refs.dialog.controlDialog({
@@ -122,6 +143,7 @@ export default {
         type: "warning"
       })
         .then(() => {
+          this.loading=true
           this.$axios({
             url: "/ego/record/deleteByIds",
             method: "post",
@@ -130,6 +152,7 @@ export default {
             }
           }).then(res => {
             if (res.data.code == 1) {
+              this.loading=false
               this.getData();
               this.$message({
                 type: "success",
@@ -152,6 +175,7 @@ export default {
         type: "warning"
       })
         .then(() => {
+          this.loading=true
           this.$axios({
             url:'/ego/record/deleteAll',
             method:'get',
@@ -159,8 +183,9 @@ export default {
               user:this.$store.state.userMsg.user
             }
           }).then(res=>{
-            if(res.data.code ==1)
+            if(res.data.code)
             {
+              this.loading=false
               this.$message({
                 type: "success",
                 message: "清空成功!"
@@ -185,6 +210,7 @@ export default {
         type: "warning"
       })
         .then(() => {
+          this.loading=true
           this.$axios({
             url: "/ego/record/deleteById",
             method: "post",
@@ -192,7 +218,8 @@ export default {
               _id: data._id
             }
           }).then(res => {
-            if (res.data.code == 1) {
+            if (res.data.code) {
+              this.loading = true
               this.currentPage = 1
               this.getData();
               this.$message({
@@ -203,6 +230,7 @@ export default {
           });
         })
         .catch(() => {
+          this.loading= false
           this.$message({
             type: "info",
             message: "已取消删除"
@@ -225,17 +253,21 @@ export default {
         cancelButtonText: "信息有误，前往修改"
       })
         .then(() => {
+          this.loading = true
           this.$axios({
             url:'/ego/record/pay',
             method:'post',
             data:{
               ids:this.selections,
               money:this.totalPrice,
-              user:this.$store.state.userMsg.user
+              user:this.$store.state.userMsg.user,
+              goodIdArr:this.goodIdArr,
+              orderConfigArr:this.orderConfigArr
             }
           }).then(res=>{
             if(res.data.code)
             {
+              this.loading = false
               this.selections = []
               this.currentPage = 1
               this.getData()
@@ -246,6 +278,7 @@ export default {
               });
             }
             else{
+              this.loading = false
               this.$message({
                 type: "error",
                 message:res.data.msg

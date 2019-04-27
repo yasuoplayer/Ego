@@ -1,5 +1,5 @@
 <template>
-  <div class="commodity-option">
+  <div class="commodity-option" v-loading='loading'>
     <div class="name"><el-button size="small" type="primary"  round="">{{form.brand}}</el-button>{{form.name}}</div>
     <el-form label-position="left" label-width="70px" :model="form">
       <el-form-item label="会员价">
@@ -55,7 +55,8 @@ export default {
       memorys:[],
       colors:[],
       number:0,
-      data:{}
+      data:{},
+      loading:false
     };
   },
   methods: {
@@ -140,7 +141,7 @@ export default {
 
       if (!msg) {
         if (flg != "buy") {
-
+          this.loading=true
           this.$axios({   //添加到购物车
             url:'/ego/record/add',
             method:'post',
@@ -160,9 +161,11 @@ export default {
               isBuy:false,
               inCart:true,
               commentTime:'',
+              isSend:false,
               goodId:this.data._id
             }
           }).then(res=>{
+            this.loading=false
             this.$message({
               message: res.data.msg,
               type: res.data.code==1?"success":'error'
