@@ -7,7 +7,8 @@ export default new Vuex.Store({
   state: {
     userMsg:{
       root:1
-    }
+    },
+    socket:''
   },
   mutations: {
     cancellation(state)
@@ -17,6 +18,10 @@ export default new Vuex.Store({
     setUserMsg(state,data)
     {
       state.userMsg = {...data}
+    },
+    setSocket(state,socket)
+    {
+      state.socket = socket
     }
   },
   actions: {

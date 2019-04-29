@@ -1,17 +1,17 @@
 <template>
   <div class="table-dialog">
     <el-dialog :title="title" append-to-body :visible.sync="dialogVisible">
-      <el-form ref="form" :model="formData" label-width="80px">
-        <el-form-item label="颜色">
+      <el-form ref="form" :model="formData" label-width="80px" :rules="rules">
+        <el-form-item label="颜色" prop="color">
           <el-input v-model="formData.color" clearable></el-input>
         </el-form-item>
-        <el-form-item label="内存">
-          <el-input-number v-model="formData.memory" :min="8" :max="64" :step="8" :precision="0"></el-input-number>
+        <el-form-item label="内存" prop="memory">
+          <el-input-number v-model="formData.memory" :min="16" :max="512" :precision="0"></el-input-number>
         </el-form-item>
-        <el-form-item label="价格">
-          <el-input-number v-model="formData.price" :min="1" :max="10000" :precision="0"></el-input-number>
+        <el-form-item label="价格" prop="price">
+          <el-input-number v-model="formData.price" :min="1" :max="100000" :precision="0"></el-input-number>
         </el-form-item>
-        <el-form-item label="数量">
+        <el-form-item label="数量" prop="number">
           <el-input-number v-model="formData.number" :min="1" :max="1000" :precision="0"></el-input-number>
         </el-form-item>
       </el-form>
@@ -26,64 +26,89 @@
 export default {
   name: "tableDialog",
   data() {
+    var validateMemory = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入手机内存"));
+      } else {
+        for (let i = 3; i < 10; i++) {
+          if (Math.pow(2, i) == value) {
+            callback();
+            return;
+          }
+        }
+        callback(new Error("手机内存必须为2的正整数幂次方"));
+      }
+    };
+
     return {
       formData: {
         color: "",
-        memory: "8",
-        price: "",
-        number: "1"
+        memory: 8,
+        price: 1,
+        number: 1
       },
-      index:-1,
+      index: -1,
       dialogVisible: false,
-      mode:'add',
-      title:'新增参数'
+      mode: "add",
+      title: "新增参数",
+      rules: {
+        color: [{ required: true, message: "请输入商品颜色", trigger: "blur" }],
+        price: [{ required: true, message: "请输入商品价格", trigger: "blur" }],
+        memory: [
+          { required: true, validator: validateMemory, trigger: "blur" }
+        ],
+        number: [{ required: true, message: "请输入商品价格", trigger: "blur" }]
+      }
     };
   },
   methods: {
     controlDialog(obj) {
       this.dialogVisible = obj.flag;
       this.formData = obj.data;
-      this.mode = obj.mode
-      this.index = obj.index
-      if(obj.mode=='add')
-      {
-          this.title = '新增参数'
-      }
-      else{
-          this.title = '修改参数'
+      this.mode = obj.mode;
+      this.index = obj.index;
+      if (obj.mode == "add") {
+        this.title = "新增参数";
+      } else {
+        this.title = "修改参数";
       }
     },
     cancel() {
       this.resetFrom();
+      this.$refs.form.resetFields();
       this.dialogVisible = false;
     },
     comfirmForm() {
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          this.sendData();
+        }
+      });
+    },
+    sendData() {
       this.$message({
         message: "操作成功",
         type: "success"
       });
-      if(this.formData.number<10)
-      {
-        this.formData.state = 'warning'
+      if (this.formData.number < 10) {
+        this.formData.state = "warning";
+      } else {
+        delete this.formData.state;
       }
-      else{
-        delete this.formData.state
-      }
-      this.$emit('addRow',{
-        data:this.formData,
-        index:this.index
-      })
+      this.$emit("addRow", {
+        data: this.formData,
+        index: this.index
+      });
       this.dialogVisible = false;
     },
-    resetFrom()
-    {
+    resetFrom() {
       this.formData = {
         color: "",
-        memory: "8",
-        price: "",
-        number: "1"
-      }
-      this.index = -1
+        memory: 8,
+        price: 1,
+        number: 1
+      };
+      this.index = -1;
     }
   }
 };

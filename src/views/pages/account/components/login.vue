@@ -1,26 +1,26 @@
 <template>
-      <div class="login-form" v-loading='loading'>
-        <div class="title">欢迎登录</div>
-        <el-form :model="form" :rules="rules" ref="form" label-width="50px">
-          <el-form-item prop="user">
-            <div class="label" slot="label">帐号</div>
-            <el-input type="text" v-model="form.user" clearable>
-              <img slot="prefix" v-lazy="loginIcon.user" class="img">
-            </el-input>
-          </el-form-item>
-          <el-form-item prop="pass">
-            <div class="label" slot="label">密码</div>
-            <el-input type="password" v-model="form.psw" autocomplete="off" clearable>
-              <img slot="prefix" v-lazy="loginIcon.psw" class="img">
-            </el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="submitForm" class="bt">登录</el-button>
-            <span class="leftBt" @click="toggleLogin">前往注册</span>
-            <span class="rightBt" @click="goHome">返回主页</span>
-          </el-form-item>
-        </el-form>
-      </div>
+  <div class="login-form" v-loading="loading">
+    <div class="title">欢迎登录</div>
+    <el-form :model="form" :rules="rules" ref="form" label-width="50px">
+      <el-form-item prop="user">
+        <div class="label" slot="label">帐号</div>
+        <el-input type="text" v-model="form.user" clearable>
+          <img slot="prefix" v-lazy="loginIcon.user" class="img">
+        </el-input>
+      </el-form-item>
+      <el-form-item prop="pass">
+        <div class="label" slot="label">密码</div>
+        <el-input type="password" v-model="form.psw" autocomplete="off" clearable>
+          <img slot="prefix" v-lazy="loginIcon.psw" class="img">
+        </el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="submitForm" class="bt">登录</el-button>
+        <span class="leftBt" @click="toggleLogin">前往注册</span>
+        <span class="rightBt" @click="goHome">返回主页</span>
+      </el-form-item>
+    </el-form>
+  </div>
 </template>
 <script>
 export default {
@@ -50,53 +50,54 @@ export default {
         psw: [{ validator: validatePass, trigger: "blur" }],
         user: [{ validator: validateUser, trigger: "blur" }]
       },
-      loading:false
+      loading: false
     };
   },
-  props:{
-      loginIcon:{
-          type:Object
-      }
+  props: {
+    loginIcon: {
+      type: Object
+    }
   },
   mounted() {
     this.isLogin = true;
   },
   methods: {
     submitForm() {
-
       this.$refs.form.validate(valid => {
         if (valid) {
-          this.loading=true
+          this.loading = true;
           this.$axios({
-            method:'post',
-            url:'/ego/user/login',
-            data:this.form
-          }).then(res=>{
-             if(res.data.code)
-            {
-              this.loading=false
+            method: "post",
+            url: "/ego/user/login",
+            data: this.form
+          }).then(res => {
+            if (res.data.code) {
+              this.loading = false;
+              this.$store.commit("setUserMsg", res.data.data);
+              if (res.data.data.phone||res.data.data.root) {
+                this.$router.push("/");
+              } else {
+                this.$message({
+                  type: "warning",
+                  message: "请先填写个人信息哦"
+                });
+                this.$router.push("/personal/personalData");
+              }
+            } else {
+              this.loading = false;
               this.$message({
-                type:'success',
-                message:res.data.msg
-              })
-              this.$store.commit('setUserMsg',res.data.data)
-              this.$router.push("/");
+                type: "error",
+                message: res.data.msg
+              });
             }
-            else{
-              this.loading=false
-              this.$message({
-                type:'error',
-                message:res.data.msg
-              })
-            }
-          })
+          });
         } else {
           return false;
         }
       });
     },
     toggleLogin() {
-        this.$emit('toggleLogin')
+      this.$emit("toggleLogin");
     },
     goHome() {
       this.$router.push("/home");

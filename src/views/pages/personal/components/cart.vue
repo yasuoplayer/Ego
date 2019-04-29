@@ -272,6 +272,10 @@ export default {
               this.currentPage = 1
               this.getData()
               this.$store.commit('setUserMsg',res.data.data)
+              if(this.$store.state.socket)
+              {
+                this.$store.state.socket.emit('getOrder')
+              }
               this.$message({
                 type: "success",
                 message: "已经成功购买"

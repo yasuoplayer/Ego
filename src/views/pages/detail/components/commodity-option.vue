@@ -158,7 +158,6 @@ export default {
               user:this.$store.state.userMsg.user,
               isArrive:false,
               time:0,
-              isBuy:false,
               inCart:true,
               commentTime:'',
               isSend:false,

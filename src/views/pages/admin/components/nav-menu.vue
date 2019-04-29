@@ -41,9 +41,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.nav-menu{
-max-width: 200px;
-}
+// .nav-menu{
+// max-width: 250px;
+// }
 .bt{
   width: 100%;
 }
