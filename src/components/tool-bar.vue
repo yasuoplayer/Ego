@@ -7,7 +7,7 @@
     <li class="tool-bar-item" v-if="userName">
       <span class="cancel" @click="cancellation">退出登录</span>
     </li>
-    <li class="tool-bar-item" v-if="!isAdmin" @click="goCart">
+    <li class="tool-bar-item" v-if="userName&&!isAdmin" @click="goCart">
       <span class="cart-img"></span>
       <span class="cart">购物车</span>
     </li>
@@ -48,7 +48,9 @@ export default {
   },
   methods: {
     cancellation() {
+      localStorage.removeItem('egoUserMsg')
       this.$store.commit("cancellation");
+      this.$router.push("/");
     },
     goHome() {
       this.$router.push("/home");

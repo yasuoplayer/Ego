@@ -11,23 +11,8 @@
             <span class="title-content">大牌畅销</span>
           </div>
           <ul class="phone-list clearfix">
-            <li class="phone">
-              <span class="phone-name">Apple</span>
-            </li>
-            <li class="phone">
-              <span class="phone-name">小米</span>
-            </li>
-            <li class="phone">
-              <span class="phone-name">荣耀</span>
-            </li>
-            <li class="phone">
-              <span class="phone-name">华为</span>
-            </li>
-            <li class="phone">
-              <span class="phone-name">vivo</span>
-            </li>
-            <li class="phone">
-              <span class="phone-name">OPPO</span>
+            <li class="phone" v-for="(item,index) in phoneList" :key="index">
+              <span class="phone-name" @click="goto(item)">{{item}}</span>
             </li>
           </ul>
         </div>
@@ -106,8 +91,20 @@ export default {
         require('../imgs/banner2.png'),
         require('../imgs/banner3.png'),
         require('../imgs/banner4.png')
-      ]
+      ],
+      phoneList:['苹果','小米','荣耀','华为','vivo','oppo',]
     };
+  },
+  methods:{
+    goto(brand)
+    {
+      this.$router.push({
+        path:'/result',
+        query:{
+          brand
+        }
+      })
+    }
   }
 };
 </script>

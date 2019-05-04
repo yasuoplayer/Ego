@@ -247,6 +247,15 @@ export default {
     },
     buy() {
       var userMsg = this.$store.state.userMsg
+      if(!userMsg.user||!userMsg.province||!userMsg.city||!userMsg.area||!userMsg.more||!userMsg.phone)
+      {
+        this.$alert('请先填写完整个人信息！', '提示', {
+          confirmButtonText: '确定',
+          callback: () => {
+            this.$router.push('/personal/personalData')
+          }
+        })
+      }
       this.$confirm(`${userMsg.user} ${userMsg.province} ${userMsg.city} ${userMsg.area} ${userMsg.more} ${userMsg.phone}`, "当前收货人信息是", {
         distinguishCancelAndClose: true,
         confirmButtonText: "信息无误，确认购买",

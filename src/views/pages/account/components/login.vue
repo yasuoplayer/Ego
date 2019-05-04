@@ -72,6 +72,7 @@ export default {
             data: this.form
           }).then(res => {
             if (res.data.code) {
+              localStorage.setItem('egoUserMsg',JSON.stringify(this.form))
               this.loading = false;
               this.$store.commit("setUserMsg", res.data.data);
               if (res.data.data.phone||res.data.data.root) {

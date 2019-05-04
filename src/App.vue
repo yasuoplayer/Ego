@@ -11,10 +11,11 @@ export default {
     return {};
   },
   mounted() {
+    
     const socket = io("http://localhost:3000");
     socket.on("connect", () => {
       this.$store.commit("setSocket", socket);
-      socket.on("getOrder", data => {
+      socket.on("getOrder", () => {
         if (this.$store.state.userMsg.root) {
           this.$notify({
             title: "提示",
@@ -27,6 +28,37 @@ export default {
         }
       });
     });
+  },
+  methods:{
+    checkLocalStorage()
+    {
+      if(localStorage.getItem('egoUserMsg'))
+      {
+                  this.$axios({
+            method: "post",
+            url: "/ego/user/login",
+            data: JSON.parse(localStorage.getItem('egoUserMsg'))
+          }).then(res => {
+            if (res.data.code) {
+              this.$store.commit("setUserMsg", res.data.data);
+              if (res.data.data.phone||res.data.data.root) {
+                this.$router.push("/");
+              } else {
+                this.$message({
+                  type: "warning",
+                  message: "请先填写个人信息哦"
+                });
+                this.$router.push("/personal/personalData");
+              }
+            } else {
+              this.$message({
+                type: "error",
+                message: res.data.msg
+              });
+            }
+          });
+      }
+    }
   }
 };
 </script>

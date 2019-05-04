@@ -1,12 +1,13 @@
 <template>
   <div class="result">
-    <searchWrap @filterChange='filterChange'/>
+    <searchWrap @filterChange='filterChange' :filter='filter'/>
     <phoneList ref="resultList"/>
   </div>
 </template>
 <script>
 import searchWrap from './components/search-wrap'
 import phoneList from './components/phone-list'
+var brandList = ["苹果", "小米", "华为","荣耀" ,"vivo" ,"oppo" ,"其他","全部品牌"]
 export default {
   name: "result",
   data() {
@@ -20,19 +21,28 @@ export default {
     phoneList
   },
   watch:{
-        '$route' (to, from) {
+        '$route' (to) {
           this.key = to.params.key
           this.setResultParams()
     }
   },
   mounted() {
-    this.key = this.$route.params.key
+    this.key = this.$route.params.key 
+    if(this.$route.query.brand)
+    {
+      if(brandList.indexOf(this.$route.query.brand)!=-1)
+      {
+        this.filter.brand = this.$route.query.brand
+      }
+      else{
+        this.filter.brand ='其他'
+      }
+    }
     this.setResultParams()
   },
   methods: {
-    filterChange(filter)
+    filterChange()
     {
-      this.filter = filter
       this.setResultParams()
     },
     setResultParams()

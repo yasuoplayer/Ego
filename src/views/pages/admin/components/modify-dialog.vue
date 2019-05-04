@@ -90,6 +90,18 @@ export default {
           lable: "苹果",
           value: "苹果"
         },
+                {
+          lable: "荣耀",
+          value: "荣耀"
+        },
+                {
+          lable: "vivo",
+          value: "vivo"
+        },
+                {
+          lable: "oppo",
+          value: "oppo"
+        },
         {
           lable: "其他",
           value: "其他"

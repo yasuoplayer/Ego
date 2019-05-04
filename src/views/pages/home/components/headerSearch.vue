@@ -8,8 +8,8 @@
       <el-input placeholder="请输入内容" v-model="searchKey" prefix-icon="el-icon-search" class="search">
         <el-button slot="append" @click="search">搜索</el-button>
       </el-input>
-      <div class="recommends clearfix">
-        <span class="recommends-item" v-for="(tag,index) in tags" :key="index" :class="{'hot':tag.isHot}">
+      <div class="recommends clearfix" v-loading='loading'>
+        <span class="recommends-item" v-for="(tag,index) in tags" :key="index" :class="{'hot':tag.salesVolume>10}" @click="showDetail(tag._id)">
           {{tag.name}}
         </span>
       </div>
@@ -17,45 +17,37 @@
   </div>
 </template>
 <script>
-var tags = [
-  {
-    name:'三星 S10',
-    isHot:false
-  },
-  {
-    name:'华为 p30',
-    isHot:false
-  },
-  {
-    name:'荣耀 v20',
-    isHot:true
-  },
-  {
-    name:'iphone x',
-    isHot:false
-  },
-  {
-    name:'红米 note7pro',
-    isHot:true
-  }     ,
-    {
-    name:'小米8 青春版',
-    isHot:false
-  }      
-]
 export default {
   name: "headerSearch",
   data() {
     return {
       searchKey: "",
       logo:require('../imgs/logo.jpg'),
-      tags,
+      tags:[],
+      loading:false
     }
+  },
+  mounted()
+  {
+    this.getHot()
   },
   methods:{
     search()
     {
       this.$router.push('/result/'+this.searchKey)
+    },
+    getHot() {
+      this.loading = true
+      this.$axios({
+        url: "/ego/good/getHotTag"
+      }).then(res => {
+          this.tags = res.data
+          this.loading = false
+      });
+    },
+    showDetail(id)
+    {
+      this.$router.push('/detail/'+id)
     }
   }
 };

@@ -117,10 +117,11 @@ export default {
       if(!this.$store.state.userMsg.user)
       {
         this.$message({
-          message: `请先填写购买信息哦`,
+          message: `请先登录哦`,
           type: "warning"
       })
-      this.$router.push('/login')
+      this.$router.push('/account')
+      return
       }
       var msg;
       for (var i in this.form) {
@@ -174,6 +175,15 @@ export default {
       }
     },
     buy() {
+            if(!this.$store.state.userMsg.user)
+      {
+        this.$message({
+          message: `请先登录哦`,
+          type: "warning"
+      })
+      this.$router.push('/account')
+      return
+      }
         this.$router.push("/personal/cart");
     }
   }

@@ -30,7 +30,7 @@ var fileterMsg = [
   {
     title: "品牌",
     type: "brand",
-    list: ["苹果", "小米", "华为","其他" ,"全部品牌"]
+    list: ["苹果", "小米", "华为","荣耀" ,"vivo" ,"oppo" ,"其他","全部品牌"]
   },
   {
     title: "价格",
@@ -47,13 +47,22 @@ export default {
   name: "search-wrap",
   data() {
     return {
-      filter: { brand: "全部品牌", price: "全部价格", sort: "默认排序" },
       fileterMsg,
     };
   },
+  props:{
+    filter:{
+      type:Object,
+      default:function()
+      {
+        return { brand: "全部品牌", price: "全部价格", sort: "默认排序" }
+      }
+    }
+  },
   methods: {
     change() {
-      this.$emit('filterChange',this.filter)
+      this.$emit('filterChange')
+      
     }
   }
 };

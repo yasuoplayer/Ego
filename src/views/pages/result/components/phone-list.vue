@@ -50,16 +50,7 @@ export default {
     data()
     {
         return {
-            list:[
-                {
-                    id:0,
-                    img:require('../imgs/phone1.png'),
-                    name:'【套餐版】Xiaomi/小米 小米Play 流光渐变AI双摄 4GB+64GB 梦幻蓝 移动联通电信全网通4G手机',
-                    price:'1158',
-                    salesVolume:'100',
-                    rate:'4'
-                }
-            ],
+            list:[],
             currentPage:1,
             total:40,
             pageSizes:[5, 10, 20, 40],
@@ -102,7 +93,6 @@ export default {
                     filter:this.filterData.filter
                 }
             }).then(res=>{
-                // console.log(res.data.data)
                 this.list = res.data.data
                 this.total = res.data.total
                 this.loading = false
