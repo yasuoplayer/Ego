@@ -21,7 +21,6 @@ export default {
   },
   mounted()
   {
-    console.log(!this.$store.state.userMsg.root)
     if(!this.$store.state.userMsg.root)
     {
       this.$router.push('/')

@@ -94,7 +94,18 @@ export default {
     setData(data)
     {
       this.data = {...data}
-      this.setDefaultOption(this.data.defaultOption)
+      if(this.data.defaultOption)
+      {
+        this.setDefaultOption(this.data.defaultOption)
+      }
+      else{
+        this.$message({
+          type:'warning',
+          message:'商品没有货存了'
+        })
+        this.$router.push('/')
+      }
+      
     },
     setDefaultOption(data)
     {

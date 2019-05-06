@@ -37,7 +37,7 @@ export default {
           _id: this.id
         }
       }).then(res => {
-        this.img = "http://120.79.249.6:3000/" + res.data.data.img;
+        this.img = "http://localhost:3000/" + res.data.data.img;
         this.$refs.commodityOption.setData(this.handleData(res.data.data));
       });
     },
@@ -48,12 +48,11 @@ export default {
       var config = data.config;
       var defaultOption = {};
       var minPrice = data.config[0].price;
-      var k = 0;
       for (var n = 0; n < config.length; n++) {
-        if (config[n].price < minPrice && config[n].number > 0) {
+        if (config[n].price <= minPrice && config[n].number > 0) {
           isDefult = true;
           minPrice = config[n].price;
-          k = 0;
+          defaultOption = config[n]
         }
         if (colors.indexOf(config[n].color) == -1) {
           colors.push(config[n].color);
@@ -67,7 +66,6 @@ export default {
       }
       data.memorys = memorys;
       data.colors = colors;
-
       return data;
     }
   }
