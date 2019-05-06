@@ -18,6 +18,13 @@ export default {
     tooBar,
     foot,
     personalContent
+  },
+    mounted()
+  {
+    if(!this.$store.state.userMsg.root!=0)
+    {
+      this.$router.push('/')
+    }
   }
 };
 </script>

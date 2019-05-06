@@ -286,8 +286,8 @@ export default {
                 this.$store.state.socket.emit('getOrder')
               }
               this.$message({
-                type: "success",
-                message: "已经成功购买"
+                type: res.data.code==1?'success':'warning',
+                message: res.data.msg
               });
             }
             else{

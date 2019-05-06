@@ -23,7 +23,7 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="数量">
-        <el-input-number v-model="form.number" :min="1" :max="number" :step="1" :precision="0"></el-input-number>
+        <el-input-number v-model="form.number" :min="0" :max="number" :step="1" :precision="0"></el-input-number>
       </el-form-item>
 
       <el-form-item label="总价格">
@@ -48,7 +48,7 @@ export default {
         name:'',
         price: 0,
         memory: "",
-        number: 1,
+        number: 0,
         color: "",
         brand:''
       },

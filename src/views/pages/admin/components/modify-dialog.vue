@@ -137,7 +137,7 @@ export default {
       this.dialogVisible = obj.flag;
       this.formData = { ...obj.data };
       if (this.formData._id) {
-        this.imageUrl = "http://localhost:3000/" + this.formData.img;
+        this.imageUrl = "http://120.79.249.6:3000/" + this.formData.img;
         this.tableData = this.handleData([...this.formData.config]);
       }
     },

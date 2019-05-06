@@ -173,12 +173,13 @@ export default {
     },
       handleClick(data)
       {
-        var newData = {...data}
-        newData.isSend=true
+        var _id = data._id
         this.$axios({
           url:'/ego/record/updateById',
           method:'post',
-          data:newData
+          data:{
+            _id
+          }
         }).then(res=>{
           if(res.data.code)
           {

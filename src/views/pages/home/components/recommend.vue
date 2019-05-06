@@ -16,7 +16,7 @@
             <el-carousel-item v-for="(item,i) in listItem.rightImgs" :key="i">
               <div class="loop-wrap">
                 <div class="loop-item" v-for="(phone,k) in item" :key="k" @click="showDetail(phone._id)">
-                  <img v-lazy="'http://localhost:3000/'+phone.img" class="phone-img">
+                  <img v-lazy="'http://120.79.249.6:3000/'+phone.img" class="phone-img">
                   <div class="name" :title="phone.name">{{phone.name}}</div>
                   <div class="money">{{'￥'+phone.minPrice+'.00'}}</div>
                 </div>

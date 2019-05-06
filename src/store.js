@@ -5,9 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    userMsg:{
-      root:1
-    },
+    userMsg:'',
     socket:''
   },
   mutations: {

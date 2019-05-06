@@ -1,9 +1,9 @@
 <template>
         <div class="phone-list" v-loading='loading'>
         <el-row :gutter="4" >
-              <el-col :span="6"  class="row" v-for="(item,index) in list" :key="index">
+              <el-col :span="6"  class="row" v-for="(item,index) in list" :key="index" >
             <el-card shadow="hover" class="card" >
-            <img v-lazy="'http://localhost:3000/'+item.img"  class="img"/>
+            <img v-lazy="'http://120.79.249.6:3000/'+item.img"  class="img"/>
             <div class="name" :title="item.name">
                 {{item.name}}
             </div>
@@ -93,7 +93,7 @@ export default {
                     filter:this.filterData.filter
                 }
             }).then(res=>{
-                this.list = res.data.data
+                this.list = res.data.data.filter(item => item.minPrice > -1)
                 this.total = res.data.total
                 this.loading = false
             })
