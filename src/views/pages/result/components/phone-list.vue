@@ -93,7 +93,7 @@ export default {
                     filter:this.filterData.filter
                 }
             }).then(res=>{
-                this.list = res.data.data.filter(item => item.minPrice > -1)
+                this.list = res.data.data.filter(item => item.minPrice != 999999)
                 this.total = res.data.total
                 this.loading = false
             })
