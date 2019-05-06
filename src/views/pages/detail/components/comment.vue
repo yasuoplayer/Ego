@@ -37,7 +37,6 @@ export default {
           goodId
         }
       }).then(res=>{
-        console.log(res.data)
         this.data = res.data
       })
     },
