@@ -133,22 +133,22 @@ export default {
       },
       rules: {
         name: [{ required: true, message: "请输入商品名称", trigger: "blur" }],
-        brand: [{ required: true, message: "请选择商品品牌", trigger: "blur" }],
-        type: [{ required: true, message: "请选择商品类型", trigger: "blur" }],
+        brand: [{ required: true, message: "请选择商品品牌", trigger: "change" }],
+        type: [{ required: true, message: "请选择商品类型", trigger: "change" }],
         number: [{ validator: checkNumber, trigger: "blur",required: true }],
         price: [{ validator: checkPrice, trigger: "blur",required: true }]
       },
             rules1: {
         name: [{ required: true, message: "请输入商品名称", trigger: "blur" }],
-        brand: [{ required: true, message: "请选择商品品牌", trigger: "blur" }],
-        type: [{ required: true, message: "请选择商品类型", trigger: "blur" }],
+        brand: [{ required: true, message: "请选择商品品牌", trigger: "change" }],
+        type: [{ required: true, message: "请选择商品类型", trigger: "change" }],
         number: [{ validator: checkNumber, trigger: "blur",required: true }],
         price: [{ validator: checkPrice, trigger: "blur",required: true }]
       },
             rules2: {
         name: [{ required: true, message: "请输入商品名称", trigger: "blur" }],
-        brand: [{ required: true, message: "请选择商品品牌", trigger: "blur" }],
-        type: [{ required: true, message: "请选择商品类型", trigger: "blur" }],
+        brand: [{ required: true, message: "请选择商品品牌", trigger: "change" }],
+        type: [{ required: true, message: "请选择商品类型", trigger: "change" }],
         
       },      
       changeImg: false,
@@ -203,6 +203,9 @@ export default {
       else{
         this.rules = this.rules1
       }
+            this.$nextTick(()=>{
+        this.$refs.form.clearValidate()
+      })
     }
   },
   components: {
@@ -282,6 +285,9 @@ this.tableData = this.handleData([...this.formData.config]);
         '新奇特'
       ]        
       }
+      this.$nextTick(()=>{
+        this.$refs.form.clearValidate()
+      })
     },
     handleData(data) {
       for (var n = 0; n < data.length; n++) {
