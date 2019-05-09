@@ -30,7 +30,7 @@ export default {
       logo:require('../imgs/logo.jpg'),
       tags:[],
       loading:false,
-      type:''
+      type:'手机'
     }
   },
   mounted()
