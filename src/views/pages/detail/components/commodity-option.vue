@@ -1,6 +1,6 @@
 <template>
   <div class="commodity-option" v-loading='loading'>
-    <div class="name"><el-button size="small" type="primary"  round="">{{form.brand}}</el-button>{{form.name}}</div>
+    <div class="phone-title"><span class="phone-name">{{form.brand}}</span>{{form.name}}</div>
     <el-form label-position="left" label-width="70px" :model="form">
       <el-form-item label="会员价">
         <div class="price">
@@ -93,17 +93,16 @@ export default {
     },    
     setData(data)
     {
-      this.data = {...data}
+      this.data = data
+      this.number = data.number
       if(this.data.defaultOption)
       {
         this.setDefaultOption(this.data.defaultOption)
       }
-      else{
-        this.$message({
-          type:'warning',
-          message:'商品没有货存了'
-        })
-        this.$router.push('/')
+      if(data.price)
+      {
+        this.form = data
+        this.form.number = 0
       }
       
     },
@@ -206,7 +205,7 @@ export default {
   display: flex;
   flex-direction: column;
 }
-.name {
+.phone-title {
   font: 700 16px/1.5 \5fae\8f6f\96c5\9ed1;
   color: #222;
   word-break: break-all;
@@ -221,6 +220,14 @@ export default {
   line-height: 40px;
   font: 700 20px Tahoma;
   color: #e00;
+}
+.phone-title .phone-name
+{
+  color: #fff;
+  background: #409EFF;
+  padding: 2px 8px;
+  font-weight: normal;
+  margin-right:4px;
 }
 </style>
 

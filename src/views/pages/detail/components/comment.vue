@@ -25,7 +25,7 @@ export default {
   },
   mounted()
   {
-      this.getData(this.$route.params.id)
+      this.getData(this.$route.query.id)
   },
   methods: {
     getData(goodId)

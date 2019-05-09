@@ -2,7 +2,7 @@
     <div class="order-management" v-loading='loading'> 
         <div class="title">订单管理</div>
         <div class="search-wrap">
-          <el-input placeholder="请输入内容" v-model="key" >
+          <el-input placeholder="请输入内容" v-model="key" class="input-with-select">
     <el-select v-model="state" slot="prepend" placeholder="请选择">
       <el-option label="已发货" value="已发货"></el-option>
       <el-option label="未发货" value="未发货"></el-option>
@@ -35,12 +35,12 @@
                         <span>{{ props.row.brand }}</span>
                         </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="12" v-if="props.row.color">
                         <el-form-item label="商品颜色">
                         <span>{{ props.row.color }}</span>
                         </el-form-item>
                 </el-col>  
-                <el-col :span="12">
+                <el-col :span="12"  v-if="props.row.memory">
                         <el-form-item label="商品内存">
                         <span>{{ props.row.memory }}</span>
                         </el-form-item>

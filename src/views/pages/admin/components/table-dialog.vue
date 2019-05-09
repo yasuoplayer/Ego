@@ -12,7 +12,7 @@
           <el-input-number v-model="formData.price" :min="1" :max="100000" :precision="0"></el-input-number>
         </el-form-item>
         <el-form-item label="数量" prop="number">
-          <el-input-number v-model="formData.number" :min="1" :max="1000" :precision="0"></el-input-number>
+          <el-input-number v-model="formData.number" :min="0" :max="1000" :precision="0"></el-input-number>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -39,7 +39,34 @@ export default {
         callback(new Error("手机内存必须为2的正整数幂次方"));
       }
     };
-
+    var checkNumber = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('商品数量不能为空'));
+        }
+        else if (!Number.isInteger(value)) {
+            callback(new Error('请输入数字值'));
+          } else {
+            if (value<0||value>10000) {
+              callback(new Error('数量必须在0-10000之间'));
+            } else {
+              callback();
+            }
+          }
+      };
+    var checkPrice = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('商品价格不能为空'));
+        }
+        else if (!Number.isInteger(value)) {
+            callback(new Error('请输入数字值'));
+          } else {
+            if (value<0||value>100000) {
+              callback(new Error('价格必须在0-100000之间'));
+            } else {
+              callback();
+            }
+          }
+      };   
     return {
       formData: {
         color: "",
@@ -53,11 +80,11 @@ export default {
       title: "新增参数",
       rules: {
         color: [{ required: true, message: "请输入商品颜色", trigger: "blur" }],
-        price: [{ required: true, message: "请输入商品价格", trigger: "blur" }],
+        price: [{ required: true, validator: checkPrice, trigger: "blur" }],
         memory: [
           { required: true, validator: validateMemory, trigger: "blur" }
         ],
-        number: [{ required: true, message: "请输入商品价格", trigger: "blur" }]
+        number: [{ required: true,validator: checkNumber, trigger: "blur" }]
       }
     };
   },

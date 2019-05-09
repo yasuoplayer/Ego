@@ -120,7 +120,7 @@ a {
   display: block;
 }
 
-.search-wrap .el-input.el-input--suffix {
+.search-wrap .el-input.el-input--suffix,.search-form .el-input.el-input--suffix {
   width: 130px;
 }
 .input-with-select .el-input-group__prepend {

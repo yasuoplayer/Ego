@@ -33,7 +33,7 @@ export default new Router({
           component:result,          
         },
         {
-          path: 'detail/:id?',
+          path: 'detail',
           name:'detail',
           component:detail,          
         }        

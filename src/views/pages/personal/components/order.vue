@@ -25,12 +25,12 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="商品颜色:">
+                <el-form-item label="商品颜色:" v-if="props.row.color">
                   <span>{{ props.row.color }}</span>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="商品内存:">
+                <el-form-item label="商品内存:" v-if="props.row.memory">
                   <span>{{ props.row.memory }}</span>
                 </el-form-item>
               </el-col>

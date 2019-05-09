@@ -12,8 +12,16 @@
     >
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column label="商品名称" prop="name" width="120"></el-table-column>
-      <el-table-column prop="color" label="颜色" width="120"></el-table-column>
-      <el-table-column prop="memory" label="内存" width="120"></el-table-column>
+      <el-table-column prop="color" label="颜色" width="120">
+      <template slot-scope="scope">
+        <span>{{ scope.row.color||'-' }}</span>
+      </template>
+      </el-table-column>
+      <el-table-column prop="memory" label="内存" width="120">
+        <template slot-scope="scope">
+        <span>{{ scope.row.memory||'-' }}</span>
+      </template>
+      </el-table-column>
       <el-table-column prop="number" label="数量" width="120"></el-table-column>
       <el-table-column prop="money" label="总价" width="120"></el-table-column>
       <el-table-column align="right">
@@ -21,7 +29,6 @@
           <el-input
             v-model="key"
             size="mini"
-            clearable
             placeholder="输入关键字搜索"
             @keyup.native="getData"
             debounce
@@ -109,26 +116,15 @@ export default {
     handleSelectionChange(selections) {
       var arr = [];
       var totalPrice = 0
-      var goodIdArr =[]
-      var orderConfigArr = []
       for (var n = 0; n < selections.length; n++) {    //新建对象
         totalPrice+=selections[n].money
-        arr.push(selections[n]._id)
-        orderConfigArr.push({
-          color:selections[n].color,
-          memory:selections[n].memory,
-          price:selections[n].price,
-          number:selections[n].number
+        arr.push({
+          id:selections[n]._id,
+          type:selections[n].color?'手机':'配件'
         })
-        if(goodIdArr.indexOf(selections[n].goodId)!=-1)
-        {
-          goodIdArr.push(selections[n].goodId)
-        }
       }
       this.totalPrice = totalPrice  //总价格
       this.selections = arr;
-      this.goodIdArr = goodIdArr
-      this.orderConfigArr=orderConfigArr
     },
     handleEdit(obj) {
       this.$refs.dialog.controlDialog({
@@ -270,8 +266,8 @@ export default {
               ids:this.selections,
               money:this.totalPrice,
               user:this.$store.state.userMsg.user,
-              goodIdArr:this.goodIdArr,
-              orderConfigArr:this.orderConfigArr
+              // goodIdArr:this.goodIdArr,
+              // orderConfigArr:this.orderConfigArr
             }
           }).then(res=>{
             if(res.data.code)

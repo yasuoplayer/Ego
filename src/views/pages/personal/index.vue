@@ -21,7 +21,7 @@ export default {
   },
     mounted()
   {
-    if(!this.$store.state.userMsg.root!=0)
+    if(this.$store.state.userMsg.root!=0)
     {
       this.$router.push('/')
     }

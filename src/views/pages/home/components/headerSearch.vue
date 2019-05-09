@@ -5,7 +5,12 @@
       <span class="name">易购 · 手机馆</span>
     </div>
     <div class="search-form">
-      <el-input placeholder="请输入内容" v-model="searchKey" prefix-icon="el-icon-search" class="search">
+      <el-input placeholder="请输入内容" v-model="searchKey"  class="search input-with-select">
+            <el-select v-model="type" slot="prepend" placeholder="请选择商品类型">
+      <el-option label="手机" value="手机"></el-option>
+      <el-option label="配件" value="配件"></el-option>
+      <el-option label="全部" value="全部"></el-option>
+    </el-select>
         <el-button slot="append" @click="search">搜索</el-button>
       </el-input>
       <div class="recommends clearfix" v-loading='loading'>
@@ -24,7 +29,8 @@ export default {
       searchKey: "",
       logo:require('../imgs/logo.jpg'),
       tags:[],
-      loading:false
+      loading:false,
+      type:''
     }
   },
   mounted()
@@ -34,7 +40,13 @@ export default {
   methods:{
     search()
     {
-      this.$router.push('/result/'+this.searchKey)
+      this.$router.push({
+        path:'/result',
+        query:{
+          key:this.searchKey,
+          type:this.type
+        }
+      })
     },
     getHot() {
       this.loading = true
@@ -47,7 +59,13 @@ export default {
     },
     showDetail(id)
     {
-      this.$router.push('/detail/'+id)
+      this.$router.push({
+        path:'/detail',
+        query:{
+          id,
+          isPhone:true
+        }
+      })
     }
   }
 };

@@ -1,6 +1,7 @@
 <template>
   <div class="recommend">
     <div class="recommend-list" v-for="(listItem,index) in list1" :key="index" >
+      <transition name="el-zoom-in-top">
       <div v-if="listItem.rightImgs.length">
       <div class="recommend-name">
         <span class="line1"></span>
@@ -26,6 +27,7 @@
         </div>
       </div>
       </div>
+      </transition>
     </div>
     <div class="recommend-list">
       <div class="recommend-name">
@@ -401,7 +403,13 @@ export default {
     },
     showDetail(id)
     {
-      this.$router.push('/detail/'+id)
+      this.$router.push({
+        path:'/detail',
+        query:{
+          id,
+          isPhone:true
+        }
+      })
     }
   }
 };
@@ -556,6 +564,8 @@ p.desc {
 .phone-img {
   display: block;
   margin: 0px auto;
+  height: 224px;
+  width: 80%;
   transform: scale(0.9);
   transition: all 0.4s linear;
 }
@@ -581,6 +591,7 @@ div.money {
 }
 .loop-wrap {
   display: flex;
+  height: 100%;
 }
 .loop-item {
   width: 25%;

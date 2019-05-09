@@ -2,7 +2,7 @@
         <div class="phone-list" v-loading='loading'>
         <el-row :gutter="4" >
               <el-col :span="6"  class="row" v-for="(item,index) in list" :key="index" >
-            <el-card shadow="hover" class="card" >
+            <el-card shadow="hover" class="card"  @click.native="showDetail(item._id,item.price)">
             <img v-lazy="'http://localhost:3000/'+item.img"  class="img"/>
             <div class="name" :title="item.name">
                 {{item.name}}
@@ -22,7 +22,7 @@
                     </div>
                 </el-col>
                     <el-col :span="8">
-                    <el-button round  type="text" size='mini' @click="showDetail(item._id)">查看详情</el-button>
+                    <el-button round  type="text" size='mini' >查看详情</el-button>
                 </el-col>
             </el-row>
             </el-card>
@@ -70,9 +70,20 @@ export default {
             this.currentPage = currentPage
             this.getData()
         },
-        showDetail(id)
+        showDetail(id,price)
         {
-            this.$router.push('/detail/'+id)
+            var isPhone = true
+            if(price)
+            {
+                isPhone = false
+            }
+            this.$router.push({
+                path:'/detail',
+                query:{
+                id,
+                isPhone
+                }
+            })
         },
         setData(obj)
         {
@@ -90,6 +101,7 @@ export default {
                     pageSize:this.pageSize,
                     currentPage:this.currentPage,
                     key:this.filterData.key,
+                    type:this.filterData.type,
                     filter:this.filterData.filter
                 }
             }).then(res=>{

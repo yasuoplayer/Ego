@@ -1,10 +1,10 @@
 <template>
   <div class="phone-parameter">
     <el-tabs tab-position="top" type="border-card">
-      <el-tab-pane label="配置参数" lazy>
+      <el-tab-pane label="配置参数" >
         <parameterTable/>
       </el-tab-pane>
-      <el-tab-pane label="用户评价" lazy>
+      <el-tab-pane label="用户评价" >
         <div class="evaluate">
           <div class="average">
             <p class="title">
@@ -42,16 +42,18 @@ export default {
   },
   mounted()
   {
-    this.getData(this.$route.params.id)
+    this.getData(this.$route.query.id,this.$route.query.isPhone)
   },
   methods:{
-    getData(_id)
+    getData(_id,isPhone)
     {
+      var isPhone = isPhone==true?1:0
       this.$axios({
         url:'/ego/good/findById',
         method:'get',
         params:{
-          _id
+          _id,
+          isPhone
         }
       }).then(res=>{
         this.rate = res.data.data.average

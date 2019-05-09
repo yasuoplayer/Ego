@@ -20,7 +20,7 @@ export default {
     },
     mounted()
     {
-      this.goodId = this.$route.params.id
+      this.goodId = this.$route.query.id
       this.getData()
     },
     methods:

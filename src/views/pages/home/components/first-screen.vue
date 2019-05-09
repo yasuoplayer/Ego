@@ -23,23 +23,8 @@
             <span class="title-content">搞机达人</span>
           </div>
           <ul class="phone-list clearfix">
-            <li class="phone">
-              <span class="phone-name">全部手机</span>
-            </li>
-            <li class="phone">
-              <span class="phone-name">游戏手机</span>
-            </li>
-            <li class="phone">
-              <span class="phone-name">拍照手机</span>
-            </li>
-            <li class="phone">
-              <span class="phone-name">女性手机</span>
-            </li>
-            <li class="phone">
-              <span class="phone-name">老人手机</span>
-            </li>
-            <li class="phone">
-              <span class="phone-name">全面屏</span>
+            <li class="phone" v-for='(item,index) in phoneList1' :key="index" @click="showGood(item,'手机')">
+              <span class="phone-name">{{item}}</span>
             </li>
           </ul>
         </div>
@@ -50,23 +35,8 @@
             <span class="title-content">手机配件</span>
           </div>
           <ul class="phone-list clearfix">
-            <li class="phone">
-              <span class="phone-name">手机贴膜</span>
-            </li>
-            <li class="phone">
-              <span class="phone-name">数据线</span>
-            </li>
-            <li class="phone">
-              <span class="phone-name">手机壳</span>
-            </li>
-            <li class="phone">
-              <span class="phone-name">移动电源</span>
-            </li>
-            <li class="phone">
-              <span class="phone-name">智能穿戴</span>
-            </li>
-            <li class="phone">
-              <span class="phone-name">蓝牙耳机</span>
+            <li class="phone" v-for='(item,index) in phoneList2' :key="index" @click="showGood(item,'配件')">
+              <span class="phone-name">{{item}}</span>
             </li>
           </ul>
         </div>
@@ -92,7 +62,9 @@ export default {
         require('../imgs/banner3.png'),
         require('../imgs/banner4.png')
       ],
-      phoneList:['苹果','小米','荣耀','华为','vivo','oppo',]
+      phoneList:['苹果','小米','荣耀','华为','vivo','oppo',],
+      phoneList1:['全部类型','游戏手机','拍照手机','女性手机','老人手机','全面屏',],
+      phoneList2:['手机壳膜','充电线材','手机支架','耳机音响','智能穿戴','新奇特',]
     };
   },
   methods:{
@@ -102,6 +74,17 @@ export default {
         path:'/result',
         query:{
           brand
+        }
+      })
+    },
+    showGood(tag,type)
+    {
+      this.$router.push({
+        path:'/result',
+        query:{
+          key:'',
+          type,
+          tag,
         }
       })
     }

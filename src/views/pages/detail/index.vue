@@ -13,12 +13,13 @@ import VuePhotoZoomPro from "vue-photo-zoom-pro";
 import commodityOption from "./components/commodity-option";
 import phoneParameter from "./components/phone-parameter";
 vue.use(VuePhotoZoomPro);
-var img = require("./imgs/phone1.png");
 export default {
   name: "detail",
   data() {
     return {
-      img
+      img:'',
+      id:-1,
+      isPhone:true
     };
   },
   components: {
@@ -26,19 +27,33 @@ export default {
     phoneParameter
   },
   mounted() {
-    this.id = this.$route.params.id;
+    this.id = this.$route.query.id;
+    this.isPhone = this.$route.query.isPhone
     this.getData();
   },
   methods: {
     getData() {
+      var params = {
+          _id: this.id,
+          isPhone:this.isPhone?1:0
+        }
       this.$axios({
         url: "/ego/good/findById",
-        params: {
-          _id: this.id
-        }
+        params,
+        method:'get'
       }).then(res => {
+        if(res.data.code)
+        {
         this.img = "http://localhost:3000/" + res.data.data.img;
-        this.$refs.commodityOption.setData(this.handleData(res.data.data));
+        if(res.data.isPhone==1)
+        {
+          this.$refs.commodityOption.setData(this.handleData(res.data.data));
+        }
+        else{
+          this.$refs.commodityOption.setData(res.data.data)
+        }
+        }
+
       });
     },
     handleData(data) {
