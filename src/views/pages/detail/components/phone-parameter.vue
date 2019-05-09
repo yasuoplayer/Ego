@@ -33,7 +33,7 @@ export default {
   name: "phoneParameter",
   data() {
     return {
-      rate: 3.7
+      rate: 0
     };
   },
   components:{
@@ -56,7 +56,10 @@ export default {
           isPhone
         }
       }).then(res=>{
-        this.rate = res.data.data.average
+        if(res.data.data)
+        {
+          this.rate = res.data.data.average
+        }
       })
     }
   }

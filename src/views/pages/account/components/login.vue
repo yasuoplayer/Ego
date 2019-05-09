@@ -78,20 +78,22 @@ export default {
             if (res.data.code) {
               this.loading = false;
               this.$store.commit("setUserMsg", res.data.data);
-              if (res.data.data.phone) {
-                if(res.data.data.root)
-                {
-                  this.$router.push("/");
-                }else{
+              if (res.data.data.phone) {               
                   if(this.back){
                     this.$router.go(-1)
                   }
-                }
+                  else{
+                    this.$router.push("/");
+                  }
               } else {
+                if(!res.data.data.root)
+                {
                 this.$message({
                   type: "warning",
                   message: "请先填写个人信息哦"
                 });
+                }
+
                 this.$router.push("/personal/personalData");
               }
             } else {

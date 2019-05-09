@@ -204,7 +204,7 @@ export default {
       this.$router.push({ path: '/account', query: { back: 1 }});
       return
       }
-      if(!this.$store.state.userMsg.root)
+      if(this.$store.state.userMsg.root)
       {
         this.$message({
           message: `管理员不能购买哦`,

@@ -11,22 +11,24 @@ export default {
     return {};
   },
   mounted() {
-    const socket = io("http://localhost:3000");
-    socket.on("connect", () => {
-      this.$store.commit("setSocket", socket);
-      socket.on("getOrder", () => {
-        if (this.$store.state.userMsg.root) {
-          this.$notify({
-            title: "提示",
-            message: "收到新的订单，点击跳转查看",
-            type: "success",
-            onClick: () => {
-              this.$router.push("/admin/orderManagement");
-            }
-          });
-        }
+    if (!this.$store.state.socket) {
+      const socket = io("http://localhost:3000");
+      socket.on("connect", () => {
+        this.$store.commit("setSocket", socket);
+        socket.on("getOrder", () => {
+          if (this.$store.state.userMsg.root) {
+            this.$notify({
+              title: "提示",
+              message: "收到新的订单，点击跳转查看",
+              type: "success",
+              onClick: () => {
+                this.$router.push("/admin/orderManagement");
+              }
+            });
+          }
+        });
       });
-    })
+    }
   }
 };
 </script>
@@ -88,7 +90,8 @@ a {
   display: block;
 }
 
-.search-wrap .el-input.el-input--suffix,.search-form .el-input.el-input--suffix {
+.search-wrap .el-input.el-input--suffix,
+.search-form .el-input.el-input--suffix {
   width: 130px;
 }
 .input-with-select .el-input-group__prepend {
@@ -97,7 +100,7 @@ a {
 .el-input.el-input--mini.el-input--suffix {
   width: 100%;
 }
-.el-table .warning-row{
-  background: oldlace ;
+.el-table .warning-row {
+  background: oldlace;
 }
 </style>
