@@ -23,7 +23,7 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="数量">
-        <el-input-number v-model="form.number" :min="0" :max="number" :step="1" :precision="0"></el-input-number>
+        <el-input-number v-model="form.number" :min="0" :max="number" :step="1" :precision="0"></el-input-number><span class="surplus">剩余： {{number}}台</span>
       </el-form-item>
 
       <el-form-item label="总价格">
@@ -40,6 +40,7 @@
   </div>
 </template>
 <script>
+import { debug } from 'util';
 export default {
   name: "commodityOption",
   data() {
@@ -130,7 +131,7 @@ export default {
           message: `请先登录哦`,
           type: "warning"
       })
-      this.$router.push('/account')
+      this.$router.push({ path: '/account', query: { back: 1 }});
       return
       }
       var msg;
@@ -140,6 +141,8 @@ export default {
             msg = "内存";
           } else if (i == "color") {
             msg = "颜色";
+          }else if (i == "number") {
+            msg = "数量";
           }
         }
       }
@@ -152,6 +155,13 @@ export default {
 
       if (!msg) {
         if (flg != "buy") {
+          if(this.$store.state.userMsg.root){
+            this.$message({
+              message: `管理员不能购买哦`,
+              type: "warning"
+          })
+          return            
+          }
           this.loading=true
           this.$axios({   //添加到购物车
             url:'/ego/record/add',
@@ -191,8 +201,16 @@ export default {
           message: `请先登录哦`,
           type: "warning"
       })
-      this.$router.push('/account')
+      this.$router.push({ path: '/account', query: { back: 1 }});
       return
+      }
+      if(!this.$store.state.userMsg.root)
+      {
+        this.$message({
+          message: `管理员不能购买哦`,
+          type: "warning"
+      })   
+      return     
       }
         this.$router.push("/personal/cart");
     }
@@ -228,6 +246,10 @@ export default {
   padding: 2px 8px;
   font-weight: normal;
   margin-right:4px;
+}
+.surplus{
+  padding-left: 4px;
+  color: rgb(124, 121, 121)
 }
 </style>
 

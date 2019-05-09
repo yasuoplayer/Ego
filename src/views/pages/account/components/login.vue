@@ -56,6 +56,10 @@ export default {
   props: {
     loginIcon: {
       type: Object
+    },
+    back:{
+      type:Number,
+      default:0
     }
   },
   mounted() {
@@ -74,8 +78,15 @@ export default {
             if (res.data.code) {
               this.loading = false;
               this.$store.commit("setUserMsg", res.data.data);
-              if (res.data.data.phone||res.data.data.root) {
-                this.$router.push("/");
+              if (res.data.data.phone) {
+                if(res.data.data.root)
+                {
+                  this.$router.push("/");
+                }else{
+                  if(this.back){
+                    this.$router.go(-1)
+                  }
+                }
               } else {
                 this.$message({
                   type: "warning",

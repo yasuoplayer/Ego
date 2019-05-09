@@ -1,7 +1,7 @@
 <template>
   <div class="account">
     <transition name="el-zoom-in-top">
-      <login v-if="isLogin" :loginIcon="loginIcon" @toggleLogin='toggleLogin'/>
+      <login v-if="isLogin" :loginIcon="loginIcon" @toggleLogin='toggleLogin' :back='back'/>
     </transition>
 
     <transition name="el-zoom-in-top">
@@ -20,7 +20,8 @@ export default {
         user: require("./imgs/user.png"),
         psw: require("./imgs/lock.png")
       },
-      isLogin: false
+      isLogin: false,
+      back:''
     };
   },
   components: {
@@ -29,6 +30,7 @@ export default {
   },
   mounted() {
     this.isLogin = true;
+    this.back = this.$route.query.back || 0
   },
   methods: {
     toggleLogin()
