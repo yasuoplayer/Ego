@@ -52,7 +52,7 @@ export default {
         return {
             list:[],
             currentPage:1,
-            total:40,
+            total:0,
             pageSizes:[5, 10, 20, 40],
             pageSize:5,
             filterData:{},
@@ -106,7 +106,7 @@ export default {
                 }
             }).then(res=>{
                 this.list = res.data.data.filter(item => item.minPrice != 999999)
-                this.total = res.data.total
+                this.total = this.list.length
                 this.loading = false
             })
         }

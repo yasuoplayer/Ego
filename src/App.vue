@@ -27,38 +27,6 @@ export default {
         }
       });
     })
-    this.checkLocalStorage()
-  },
-  methods:{
-    checkLocalStorage()
-    {
-      if(localStorage.getItem('egoUserMsg'))
-      {
-                  this.$axios({
-            method: "post",
-            url: "/ego/user/login",
-            data: JSON.parse(localStorage.getItem('egoUserMsg'))
-          }).then(res => {
-            if (res.data.code) {
-              this.$store.commit("setUserMsg", res.data.data);
-              if (res.data.data.phone||res.data.data.root) {
-                this.$router.push("/");
-              } else {
-                this.$message({
-                  type: "warning",
-                  message: "请先填写个人信息哦"
-                });
-                this.$router.push("/personal/personalData");
-              }
-            } else {
-              this.$message({
-                type: "error",
-                message: res.data.msg
-              });
-            }
-          });
-      }
-    }
   }
 };
 </script>
@@ -129,7 +97,7 @@ a {
 .el-input.el-input--mini.el-input--suffix {
   width: 100%;
 }
-.el-table .warning-row {
-  background: oldlace;
+.el-table .warning-row{
+  background: oldlace ;
 }
 </style>

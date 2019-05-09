@@ -14,18 +14,18 @@
           <span class="price-number">{{formData.price*formData.number}}</span>.00
         </div>
       </el-form-item>
-      <el-form-item label="颜色">
+      <el-form-item label="颜色" v-if="data.colors&&data.colors.length">
         <el-radio-group v-model="formData.color" size="small" @change='changeColor'>
           <el-radio  v-for='(item,index) in data.colors' :key='index' :label="item" border >{{item}}</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="内存">
+      <el-form-item label="内存" v-if="data.memorys&&data.memorys.length">
         <el-radio-group v-model="formData.memory" size="small" @change='changeMemory'>
           <el-radio v-for='(item,index) in data.memorys' :key='index'   :label="item" border :disabled="memorys.indexOf(item)==-1">{{item}}g</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="数量">
-        <el-input-number v-model="formData.number" :min="0" :max="number" :step="1" :precision="0"></el-input-number>
+        <el-input-number v-model="formData.number" :min="0" :max="number" :step="1" :precision="0"></el-input-number><span class="surplus">剩余： {{number}}台</span>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -53,6 +53,7 @@ export default {
     {
         var memorys = []
         var config = this.data.config
+        if(!config) return
         for(var n=0;n<config.length;n++)
         {
             if(config[n].color == this.formData.color)
@@ -70,6 +71,7 @@ export default {
     changeMemory(memory)
     {
       var config = this.data.config
+      if(!config) return
         for(var n=0;n<config.length;n++)
         {
             if(config[n].color == this.formData.color && config[n].memory == memory)
@@ -81,17 +83,32 @@ export default {
             }
         }      
     },
-    getData(_id)
+    getData(_id,isPhone)
     {
       this.loading=true
         this.$axios({
           url:'/ego/good/findById',
           method:'get',
           params:{
-            _id
+            _id,
+            isPhone
           }
         }).then(res=>{
             this.data = res.data.data
+            if(!this.data.config)
+            {
+              this.number = res.data.data.number
+            }
+            else{
+              for (let i = 0; i < this.data.config.length; i++) {
+                const item = this.data.config[i];
+                if(item.color==this.formData.color&&this.formData.memory==item.memory)
+                {
+                  this.number=item.number
+                  break
+                }
+              }
+            }
             this.handleData(this.data)
             this.changeColor('')
             this.loading=false
@@ -102,16 +119,19 @@ export default {
             var colors =[]
             var memorys =[]
             var config = data.config
-            for(var n=0;n<config.length;n++)
+            if(config)
             {
-                if(colors.indexOf(config[n].color)==-1)
-                {
-                    colors.push(config[n].color)
-                }
-                if(memorys.indexOf(config[n].memory)==-1)
-                {
-                    memorys.push(config[n].memory)
-                }           
+              for(var n=0;n<config.length;n++)
+              {
+                  if(colors.indexOf(config[n].color)==-1)
+                  {
+                      colors.push(config[n].color)
+                  }
+                  if(memorys.indexOf(config[n].memory)==-1)
+                  {
+                      memorys.push(config[n].memory)
+                  }           
+              }
             }
             data.memorys = memorys
             data.colors = colors
@@ -119,8 +139,14 @@ export default {
         controlDialog(obj)
         {
             this.dialogVisible = obj.flag
-            this.formData = obj.data
-            this.getData(obj.data.goodId)
+            this.formData = {...obj.data}
+            if(obj.data.color)
+            {
+              this.getData(obj.data.goodId,1)
+            }
+            else{
+                this.getData(obj.data.goodId,0)
+            }    
         },
                 cancel(){
             this.dialogVisible = false
@@ -130,8 +156,9 @@ export default {
         {
           this.formData.money = this.formData.number * this.formData.price
           this.loading=true
+          // console.log(this.formData)
           this.$axios({
-            url:'/ego/record/updateById',
+            url:'/ego/record/changeCart',
             method:'post',
             data:this.formData
           }).then(res=>{
@@ -151,7 +178,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
+.surplus{
+  padding-left: 4px;
+}
 </style>
 
 

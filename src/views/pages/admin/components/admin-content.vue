@@ -29,6 +29,7 @@ export default {
 }
 .content-right{
     flex: 1;
+    overflow: hidden;
     background: #fff
 }
 .router{

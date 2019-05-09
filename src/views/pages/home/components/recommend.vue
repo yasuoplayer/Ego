@@ -597,6 +597,7 @@ div.money {
   width: 25%;
 }
 .content-right {
+  overflow: hidden;
   flex: 1;
 }
 .recommend-content {

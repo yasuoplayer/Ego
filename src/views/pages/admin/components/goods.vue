@@ -4,7 +4,6 @@
     <el-table
       :data="tableData"
       border
-      stripe
       @selection-change="handleSelectionChange"
       :row-class-name="tableRowClassName"
     >
@@ -63,7 +62,7 @@ export default {
       pageSizes: [5, 10, 20, 40],
       pageSize: 5,
       currentPage: 1,
-      total: 40,
+      total: 0,
       tableData: [],
       key: "",
       selections: {
@@ -82,7 +81,7 @@ export default {
   },
   methods: {
     tableRowClassName({ row }) {
-      if (row.state == "warning") {
+      if (row.state == "warning"||row.number<10) {
         return "warning-row";
       } else {
         return "";
