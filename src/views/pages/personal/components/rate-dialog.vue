@@ -9,7 +9,9 @@
     <el-input
   type="textarea"
   placeholder="请输入评论"
-  v-model="formData.comment">
+  v-model="formData.comment"
+    maxlength="30"
+  show-word-limit>
 </el-input>
   </el-form-item>
         <el-form-item label="分数">
