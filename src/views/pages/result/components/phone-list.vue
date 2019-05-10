@@ -105,8 +105,11 @@ export default {
                     filter:this.filterData.filter
                 }
             }).then(res=>{
-                this.list = res.data.data.filter(item => item.minPrice != 999999)
-                this.total = this.list.length
+                this.total = res.data.total
+                this.list = res.data.data.filter(item => {
+                   return item.minPrice != 999999
+                })
+                
                 this.loading = false
             })
         }
