@@ -96,7 +96,11 @@ export default {
     this.getData();
   },
   methods: {
-    getData() {
+    getData(flag) {
+      if(flag=='flag')
+      {
+        this.currentPage = 1
+      }
       this.loading=true
       this.$axios({
         url: "/ego/record/getCart",

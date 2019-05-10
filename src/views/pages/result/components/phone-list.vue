@@ -88,10 +88,14 @@ export default {
         setData(obj)
         {
             this.filterData = {...obj}
-            this.getData()
+            this.getData('flag')
         },
-        getData()
+        getData(flag)
         {
+            if(flag=='flag')
+            {
+                this.currentPage=1
+            }
             this.loading = true
             this.list=[]
             this.$axios({

@@ -10,7 +10,7 @@
       <el-option label="未签收" value="未签收"></el-option>
       <el-option label="全部" value="全部"></el-option>
     </el-select>
-    <el-button slot="append" icon="el-icon-search" @click="getData" ></el-button>
+    <el-button slot="append" icon="el-icon-search" @click="getData('flag')" ></el-button>
   </el-input>
 
         </div>
@@ -187,7 +187,11 @@ export default {
         add0(s)
       );
     },
-    getData() {
+    getData(flag) {
+      if(flag=='flag')
+      {
+        this.currentPage = 1
+      }
       const pageSize = this.pageSize;
       const currentPage = this.currentPage;
       const key = this.key;

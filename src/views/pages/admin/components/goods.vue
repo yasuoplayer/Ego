@@ -16,7 +16,7 @@
             v-model="key"
             size="mini"
             placeholder="输入关键字搜索"
-            @keyup.native="getData"
+            @keyup.native="getData('flag')"
             debounce
           />
         </template>
@@ -87,7 +87,11 @@ export default {
         return "";
       }
     },
-    getData() {
+    getData(flag) {
+      if(flag)
+      {
+        this.currentPage = 1
+      }
       this.loading = true;
       this.$axios({
         url: "/ego/good/all",

@@ -10,7 +10,7 @@
       <el-option label="未签收" value="未签收"></el-option>
       <el-option label="全部" value="全部"></el-option>
     </el-select>
-    <el-button slot="append" icon="el-icon-search" @click="getData" ></el-button>
+    <el-button slot="append" icon="el-icon-search" @click="getData('flag')" ></el-button>
   </el-input>
 
         </div>
@@ -191,8 +191,12 @@ export default {
           }
         })
       },
-      getData()
+      getData(flag)
       {
+        if(flag)
+        {
+          this.currentPage = 1
+        }
         this.loading = true
         this.$axios({
           url:'/ego/record/all',
