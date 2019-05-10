@@ -63,7 +63,7 @@ export default {
         path:'/detail',
         query:{
           id,
-          isPhone:true
+          isPhone:1
         }
       })
     }
