@@ -18,7 +18,7 @@ export default {
   },
   mounted() {
     if (!this.$store.state.socket) {
-      const socket = io("http://localhost:3000");
+      const socket = io("http://120.79.249.6:3000");
       socket.on("connect", () => {
         this.$store.commit("setSocket", socket);
         socket.on("getOrder", () => {

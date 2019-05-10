@@ -50,7 +50,6 @@ export default {
 	mounted()
 	{
 		$(document).ready(function(){
-	console.log(111)
 	$(document).on("mouseenter", ".suspension .a", function(){
 		var _this = $(this);
 		var s = $(".suspension");

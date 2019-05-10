@@ -20,7 +20,11 @@ export default new Vuex.Store({
     setSocket(state,socket)
     {
       state.socket = socket
-    }
+    },
+    updateMoney(state,money)
+    {
+      state.userMsg.money = money
+    }    
   },
   actions: {
 

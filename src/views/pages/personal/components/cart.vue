@@ -276,7 +276,6 @@ export default {
               this.selections = []
               this.currentPage = 1
               this.getData()
-              this.$store.commit('setUserMsg',res.data.data)
               if(this.$store.state.socket)
               {
                 this.$store.state.socket.emit('getOrder')

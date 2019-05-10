@@ -91,7 +91,7 @@ export default {
       for(var n=this.tableData.length-1;n>-1;n--)
       {
         var attribute  = this.tableData[n].attribute
-        if(arr.indexOf(attribute)>-1)
+        if(arr.indexOf(attribute)==n)
         {
             this.tableData.splice(n,1)
         }
@@ -132,7 +132,23 @@ export default {
             attribute:'',
             val:''
         }
-        this.tableData.push(obj)
+        
+        if(!this.tableData.length)
+        {
+          this.tableData.push(obj)
+        }else{
+          var last = this.tableData.length-1
+          var lastItem = this.tableData[last]
+          if(!lastItem.attribute||!lastItem.val)
+          {
+            this.$message({
+              type:'warning',
+              mssage:'请填写完整信息'
+            })
+          }else{
+            this.tableData.push(obj)
+          }
+        }
     }
   }
 };

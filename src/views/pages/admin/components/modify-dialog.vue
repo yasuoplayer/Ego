@@ -256,7 +256,7 @@ export default {
       this.dialogVisible = obj.flag;
       this.formData = { ...obj.data };
       if (this.formData._id) {
-        this.imageUrl = "http://localhost:3000/" + this.formData.img;
+        this.imageUrl = "http://120.79.249.6:3000/" + this.formData.img;
         if(this.formData.config)
         {
 this.tableData = this.handleData([...this.formData.config]);
@@ -392,6 +392,19 @@ this.tableData = this.handleData([...this.formData.config]);
       if (obj.index > -1) {
         this.tableData.splice(obj.index, 1, obj.data);
       } else {
+        var data = obj.data
+        for(var n=0;n<this.tableData.length;n++)
+        {
+          var item = this.tableData[n]
+          if(item.color == data.colr&&item.memory==data.memory)
+          {
+            this.$message({
+              type:'warning',
+              message:'已有相同配置的商品'
+            })
+            return
+          }
+        }
         this.tableData.push({
           ...obj.data
         });

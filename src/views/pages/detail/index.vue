@@ -26,6 +26,13 @@ export default {
     commodityOption,
     phoneParameter
   },
+  watch:{
+    '$route'(to){
+    this.id = to.query.id;
+    this.isPhone = to.query.isPhone
+    this.getData();      
+    }
+  },
   mounted() {
     this.id = this.$route.query.id;
     this.isPhone = this.$route.query.isPhone
@@ -44,7 +51,7 @@ export default {
       }).then(res => {
         if(res.data.code)
         {
-        this.img = "http://localhost:3000/" + res.data.data.img;
+        this.img = "http://120.79.249.6:3000/" + res.data.data.img;
         if(res.data.isPhone==1)
         {
           this.$refs.commodityOption.setData(this.handleData(res.data.data));

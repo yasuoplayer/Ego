@@ -147,7 +147,20 @@ export default {
     getUserMsg() {
       this.loading=true
       this.form = this.$store.state.userMsg;
-      this.loading=false
+      this.$axios({
+        url:'/eo/user/getUser',
+        params:{
+          user:this.$store.state.userMsg.user
+        },
+        method:'get'
+      }).then(res=>{
+        if(rs.data.code)
+        {
+          this.$store.commit('updateMoney',res.data.data.money)
+          this.form = res.data.data
+          this.loading=false
+        }
+      })
     },
     handleMoney(flag) {
       this.$prompt("请输入金额", "提示", {
