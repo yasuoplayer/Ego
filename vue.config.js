@@ -1,4 +1,4 @@
-
+const webpack = require("webpack");
 module.exports = {
   devServer: {
     proxy: {
@@ -11,5 +11,15 @@ module.exports = {
         }
       }
     }
-  }
+  },
+  configureWebpack: {
+    plugins: [
+        new webpack.ProvidePlugin({
+            $: 'jquery',
+            jQuery: 'jquery',
+            'window.jQuery': 'jquery',
+            Popper: ['popper.js', 'default']
+          })
+    ]
+  }  
 }

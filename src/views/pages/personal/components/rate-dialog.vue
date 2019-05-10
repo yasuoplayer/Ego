@@ -23,6 +23,7 @@
 </el-dialog>
 </template>
 <script>
+// const chineseSensitiveWords = require("chinese-sensitive-words");
 export default {
     name:'modifyDialog',
     data()
@@ -48,6 +49,15 @@ export default {
         },
         comfirmForm()
         {
+            // var arr = chineseSensitiveWords.check(this.formData.comment)
+            // if(arr.length)
+            // {
+            //     this.$message({
+            //         type:'error',
+            //         message:'评论内容包含一下敏感词汇: '+arr.join(' ')
+            //     })
+            //     return 
+            // }
             this.formData.commentTime=new Date().getTime()
             this.formData.isArrive=true
             this.loading = true

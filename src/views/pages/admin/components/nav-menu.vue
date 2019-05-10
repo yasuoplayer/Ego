@@ -17,6 +17,10 @@
     <i class="el-icon-tickets"></i>
     <span slot="title">所有订单</span>
   </el-menu-item>
+      <el-menu-item index="3" @click="goTo('/admin/goodData')" >
+    <i class="el-icon-coin"></i>
+    <span slot="title">数据统计</span>
+  </el-menu-item>
 </el-menu>
   </div>
 </template>

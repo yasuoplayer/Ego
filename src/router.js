@@ -12,6 +12,7 @@ import order from './views/pages/personal/components/order.vue'
 import admin from './views/pages/admin/index.vue'
 import goods from './views/pages/admin/components/goods.vue'
 import orderManagement from './views/pages/admin/components/order-management.vue'
+import goodData from './views/pages/admin/components/good-data.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -86,7 +87,12 @@ export default new Router({
           name:'orderManagement',
           path:'orderManagement',
           component:orderManagement
-        }                     
+        },
+        {
+          name:'goodData',
+          path:'goodData',
+          component:goodData
+        }                       
       ]
     }    
   ]

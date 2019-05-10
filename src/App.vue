@@ -1,14 +1,20 @@
 <template>
   <div id="app">
     <router-view/>
+    <suspension/>
+    <!-- <a class="service" target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=28449484&site=qq&menu=yes"><img border="0" src="http://wpa.qq.com/pa?p=2:28449484:53" alt="点击联系管理员" title="点击联系管理员"/></a> -->
   </div>
 </template>
 <script>
 import io from "socket.io-client";
+import suspension from './components/suspension'
 export default {
   name: "app",
   data() {
     return {};
+  },
+  components:{
+    suspension
   },
   mounted() {
     if (!this.$store.state.socket) {
